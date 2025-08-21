@@ -1,87 +1,57 @@
 <style>
-  .btn-search {
-    background-color: #fe424d;
-    color: white;
+  .btn-login {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    margin-right: 0.5rem;
   }
-  .btn-search:hover {
-    background-color: #fe424d;
-    color: white;
-    opacity: 0.7;
+  .btn-login:hover {
+    background-color: #f8f9fa;
   }
 
-  @media (max-width: 768px) {
-    #explore {
-      margin-left: -40% !important;
-      margin-top: 0.3rem !important;
-      padding-bottom: 0.3rem;
-    }
-    .navbar-toggler {
-      height: 2rem !important;
-    }
-    .navbar-toggler-icon {
-      font-size: 1rem;
-    }
-    .navbar .d-flex {
-      height: 8rem;
-      flex-direction: column;
-      justify-content: space-evenly;
-      gap: 0.5;
-    }
-    #search-btn {
-      display: flex;
-      flex-direction: row;
-      height: 2.5rem;
-      width: 40%;
-      margin: 0 auto;
-    }
-    #search-form {
-      background-color: white;
-    }
-    #search-form input {
-      width: 80%;
-      margin-left: 2.5rem;
-    }
-    .navbar-nav-links {
-      margin-top: -5px;
-      text-align: center;
-      background-color: white;
-      padding-left: 3rem;
-      padding-bottom: 1rem;
-      border-bottom-left-radius: 3px;
-      border-bottom-right-radius: 3px;
-    }
+  .btn-signup {
+    background-color: #e25c3d;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+  }
+  .btn-signup:hover {
+    background-color: #d14c2d;
+    color: white;
   }
 </style>
 
-<nav
-  class="navbar navbar-expand-md bg-body-light border-bottom sticky-top nav-sm"
->
-  <div class="container-fluid nav-bar">
-    <a class="navbar-brand ps-4" href="">
-      <i class="fa-regular fa-compass"></i>
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+  <div class="container">
+    <!-- Logo + Brand -->
+    <a class="navbar-brand d-flex align-items-center fw-bold" href="/">
+     <img src="/images/logo.png" alt="Logo" width="40" height="40" class="me-2">
+     <span>Cartoonify</span>
     </a>
-    <div class="navbar-nav" id="explore">
-      <a class="nav-link" href="">Cartoonify</a>
-      <a class="nav-link" href="">Features</a>
-      <a class="nav-link" href="">Pricing</a>
-      <!-- <a class="nav-link" href="">Explore</a> -->
-      
-    </div>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-    >
+
+
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    
-      <div class="navbar-nav ms-auto pe-5 navbar-nav-links">
-        <a class="nav-link" href="/signup"><b>SignUp</b></a>
-        <a class="nav-link" href="/login"><b>Login</b></a>
-        <!-- <a class="nav-link" href="/logout"><b>Logout</b></a> -->
-      </div>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center ">
+        <!-- <li class="nav-item"><a class="nav-link" href="/">Home</a></li> -->
+        <li class="nav-item"><a class="nav-link" href="#Features">Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="#Gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        <li class="nav-item">
+          <a class="btn btn-login" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-signup" href="/signup">Sign Up</a>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
