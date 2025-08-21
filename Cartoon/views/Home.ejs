@@ -139,102 +139,232 @@
   </div>
 </section>
 
-<!-- About Section -->
-<section class="py-5 bg-white">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h2 class="about-title display-5 mb-4">About Cartoonify</h2>
-        <p class="about-text fs-5 mb-0">
-          Cartoonify is a web app that lets you transform normal photos into
-          stunning artworks. Choose from pencil sketches, colorful cartoons, or
-          dreamy Ghibli styles.
-        </p>
+<!-- toonify showcase -->
+  <div class="container py-5">
+    <div class="text-center mb-3">
+      <h2 class="fw-bold">✨ Toonify Showcase</h2>
+      <p class="text-muted">
+        See the magical transformation of everyday moments into charming
+        artistic wonders
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Winter Romance -->
+      <div class="col-lg-4 col-md-3 col-sm-6">
+        <div class="showcase-card shadow">
+          <img
+            src="https://images.pexels.com/photos/2071882/pexels-photo-2071882.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Winter Romance"
+            style="height: 15rem;"
+          />
+          <div class="overlay">Winter Romance</div>
+        </div>
+      </div>
+
+      <!-- Mountain View -->
+      <div class="col-lg-4 col-md-3 col-sm-6">
+        <div class="showcase-card shadow">
+          <img
+            src="https://images.pexels.com/photos/2071882/pexels-photo-2071882.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Mountain View"
+            style="height: 15rem;"
+          />
+          <div class="overlay">Mountain View</div>
+        </div>
+      </div>
+
+      <!-- Toonify Cats -->
+      <div class="col-lg-4 col-md-3 col-sm-6">
+        <div class="showcase-card shadow">
+          <img
+            src="https://images.pexels.com/photos/2071882/pexels-photo-2071882.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Toonify Cats"
+            style="height: 15rem;"
+          />
+          <div class="overlay">Toonify Cats</div>
+        </div>
+      </div>
+
+      <!-- Playful Cats -->
+      <div class="col-lg-4 col-md-3 col-sm-6">
+        <div class="showcase-card shadow">
+          <img
+            src="https://images.pexels.com/photos/2071882/pexels-photo-2071882.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Playful Cats"
+            style="height: 15rem;"
+          />
+          <div class="overlay">Playful Cats</div>
+        </div>
+      </div>
+
+      <!-- Business Professional -->
+      <div class="col-lg-4 col-md-3 col-sm-6">
+        <div class="showcase-card shadow">
+          <img
+            src="https://images.pexels.com/photos/2071882/pexels-photo-2071882.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Business Professional"
+            style="height: 15rem;"
+          />
+          <div class="overlay">Business Professional</div>
+        </div>
+      </div>
+
+      <!-- Fantasy Knight -->
+      <div class="col-lg-4 col-md-3 col-sm-6">
+        <div class="showcase-card shadow">
+          <img
+            src="https://images.pexels.com/photos/2071882/pexels-photo-2071882.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Fantasy Knight"
+            style="height: 15rem;"
+          />
+          <div class="overlay">Fantasy Knight</div>
+        </div>
       </div>
     </div>
   </div>
-</section>
 
-<style>
-  .orange-btn {
-    background-color: #ea580c;
-    transition: all 0.3s ease;
-  }
+  <!-- About Section -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <h2 class="about-title display-5 mb-4">About Cartoonify</h2>
+          <p class="about-text fs-5 mb-0">
+            Cartoonify is a web app that lets you transform normal photos into
+            stunning artworks. Choose from pencil sketches, colorful cartoons,
+            or dreamy Ghibli styles.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  .orange-btn:hover {
-    background-color: #dc2626;
-    transform: translateY(-2px);
-  }
-
-  .hero-title {
-    color: #1f2937;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  .process-text {
-    color: #6b7280;
-    font-weight: 500;
-  }
-
-  .about-title {
-    color: #1f2937;
-    font-weight: 700;
-  }
-
-  .about-text {
-    color: #4b5563;
-    line-height: 1.6;
-  }
-
-  .demo-image {
-    height: 25rem !important;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  }
-
-  .text-orange-600 {
-    color: #ea580c;
-  }
-
-  /* Hover Overlay Effect */
-  .feature-card {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .feature-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  }
-
-  .feature-card .overlay {
-    background: rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .feature-card:hover .overlay {
-    opacity: 0.1;
-  }
-</style>
-
-<script>
-  // Add interactive effects to the hero section
-  document.addEventListener("DOMContentLoaded", function () {
-    // Add loading animation to Get Started button
-    const getStartedBtn = document.querySelector(".orange-btn");
-    if (getStartedBtn) {
-      getStartedBtn.addEventListener("click", function (e) {
-        this.innerHTML =
-          '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
-        // You can add actual navigation logic here
-        setTimeout(() => {
-          this.innerHTML = "Get Started";
-        }, 2000);
-      });
+  <style>
+    .orange-btn {
+      background-color: #ea580c;
+      transition: all 0.3s ease;
     }
+
+    .orange-btn:hover {
+      background-color: #dc2626;
+      transform: translateY(-2px);
+    }
+
+    .hero-title {
+      color: #1f2937;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .process-text {
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .about-title {
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .about-text {
+      color: #4b5563;
+      line-height: 1.6;
+    }
+
+    .demo-image {
+      height: 25rem !important;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-orange-600 {
+      color: #ea580c;
+    }
+
+    /* Hover Overlay Effect */
+    .feature-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-card .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .feature-card:hover .overlay {
+      opacity: 0.1;
+    }
+
+    /* Card hover overlay effect */
+    .showcase-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .showcase-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .showcase-card:hover img {
+      transform: scale(1.08);
+    }
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .showcase-card:hover .overlay {
+      background: rgba(0, 0, 0, 0.8);
+    }
+  </style>
+
+  <script>
+    // Add interactive effects to the hero section
+    document.addEventListener("DOMContentLoaded", function () {
+      // Add loading animation to Get Started button
+      const getStartedBtn = document.querySelector(".orange-btn");
+      if (getStartedBtn) {
+        getStartedBtn.addEventListener("click", function (e) {
+          this.innerHTML =
+            '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+          // You can add actual navigation logic here
+          setTimeout(() => {
+            this.innerHTML = "Get Started";
+          }, 2000);
+        });
+      }
+
+      // Add subtle animation to demo images on load
+      const demoImages = document.querySelectorAll(".demo-image");
+      demoImages.forEach((img, index) => {
+        img.style.opacity = "0";
+        img.style.transform = "translateY(20px)";
+        setTimeout(() => {
+          img.style.transition = "all 0.6s ease";
+          img.style.opacity = "1";
+          img.style.transform = "translateY(0)";
+        }, 300 + index * 200);
+      });
+    });
 
     // Add subtle animation to demo images on load
     const demoImages = document.querySelectorAll(".demo-image");
@@ -247,17 +377,5 @@
         img.style.transform = "translateY(0)";
       }, 300 + index * 200);
     });
-  });
-
-  // Add subtle animation to demo images on load
-  const demoImages = document.querySelectorAll(".demo-image");
-  demoImages.forEach((img, index) => {
-    img.style.opacity = "0";
-    img.style.transform = "translateY(20px)";
-    setTimeout(() => {
-      img.style.transition = "all 0.6s ease";
-      img.style.opacity = "1";
-      img.style.transform = "translateY(0)";
-    }, 300 + index * 200);
-  });
-</script>
+  </script>
+</body>
