@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname,"public/images")));
 
 
 app.get("/",(req,res)=>{
-    res.render("Home.ejs");
+    res.render("Home/Home.ejs");
 })
 
 app.get("/auth/login",(req,res)=>{
@@ -22,6 +22,10 @@ app.get("/auth/login",(req,res)=>{
 
 app.get("/auth/register",(req,res)=>{
     res.render("auth/Register.ejs");
+})
+
+app.get("/pricing",(req,res)=>{
+    res.render("Home/pricing.ejs")
 })
 
 
