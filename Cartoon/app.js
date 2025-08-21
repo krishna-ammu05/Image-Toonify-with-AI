@@ -18,8 +18,20 @@ app.get("/auth/login", (req, res) => {
   res.render("auth/Login.ejs");
 });
 
+app.get("/", (req, res) => {
+  res.render("Home/Home.ejs");
+});
+
+app.get("/auth/login", (req, res) => {
+  res.render("auth/Login.ejs");
+});
+
 app.get("/auth/register", (req, res) => {
   res.render("auth/Register.ejs");
+});
+
+app.get("/pricing", (req, res) => {
+  res.render("Home/pricing.ejs");
 });
 
 app.listen(3000, () => {
