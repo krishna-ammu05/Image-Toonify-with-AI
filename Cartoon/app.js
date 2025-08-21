@@ -3,8 +3,8 @@ const app = express();
 const ejsMate = require("ejs-mate");
 const path = require("path");
 const mongoose = require("mongoose");
-const session = require("express-session");
-const passport = require("passport");
+const session = require("express-session");//cookies 
+const passport = require("passport");//using inbuilt hashing password
 const LocalStrategy = require("passport-local");
 const User = require("./models/users.js");
 
@@ -43,18 +43,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
-passport.serializeUser(User.serializeUser()); //serialize users into session
-passport.deserializeUser(User.deserializeUser()); //deserialize users into session
+passport.serializeUser(User.serializeUser()); //serialize users into session(login)
+passport.deserializeUser(User.deserializeUser()); //deserialize users into session(logout)
 
-demo user
-app.get("/demouser", async (req, res) => {
-  let fakeUser = new User({
-    email: "umesh@gmail.com",
-    username: "umesh-web",
-  });
-  let registereduser = await User.register(fakeUser, "helloworld");
-  res.send(registereduser);
-});
+// demo user
+// app.get("/demouser", async (req, res) => {
+//   let fakeUser = new User({
+//     email: "umesh@gmail.com",
+//     username: "umesh-web",
+//   });
+//   let registereduser = await User.register(fakeUser, "helloworld");
+//   res.send(registereduser);
+// });
 
 app.get("/", (req, res) => {
   res.render("Home/Home.ejs");
@@ -64,7 +64,7 @@ app.get("/login", (req, res) => {
   res.render("auth/Login.ejs");
 });
 
-app.post(
+app.post(//google,gihtub auth
   "/login",
   passport.authenticate("local", {
     failureRedirect: "/login",
@@ -90,7 +90,7 @@ app.post("/register", async (req, res) => {
     console.log(registereduser);
     res.redirect("/");
   } catch (err) {
-    res.redirect("/signup");
+    res.redirect("/register");
   }
 });
 
