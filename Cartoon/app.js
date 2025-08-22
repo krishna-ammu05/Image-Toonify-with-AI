@@ -68,13 +68,13 @@ app.get("/userdashboard", (req, res) => {
       plan: "Free Plan",
       uploads: 12,
       conversions: 47,
-      status: "Active"
+      status: "Active",
     },
     images: [
       { url: "/images/sample1.png" },
       { url: "/images/sample2.png" },
-      { url: "/images/sample3.png" }
-    ]
+      { url: "/images/sample3.png" },
+    ],
   });
 });
 
@@ -88,27 +88,37 @@ app.get("/profile", (req, res) => {
       uploads: 12,
       conversions: 47,
       status: "Active",
-      avatar: "/images/user.png"
-    }
+      avatar: "/images/user.png",
+    },
   });
 });
 
-app.get('/dashboard', (req, res) => {
-    res.render('Admin/dashboard.ejs', { dashboardData });
-});
-
-
-app.get('/toonifiedImages', (req, res) => {
+app.get("/toonifiedImages", (req, res) => {
   // Dummy data
   const images = [
-    { id: 1, url: '/uploads/dog-cartoon.png', name: 'Dog Cartoon', convertedAt: new Date('2025-08-01') },
-    { id: 2, url: '/uploads/cat-anime.png', name: 'Cat Anime', convertedAt: new Date('2025-08-10') },
-    { id: 3, url: '/uploads/selfie-sketch.png', name: 'Selfie Sketch', convertedAt: new Date('2025-08-15') }
+    {
+      id: 1,
+      url: "/uploads/dog-cartoon.png",
+      name: "Dog Cartoon",
+      convertedAt: new Date("2025-08-01"),
+    },
+    {
+      id: 2,
+      url: "/uploads/cat-anime.png",
+      name: "Cat Anime",
+      convertedAt: new Date("2025-08-10"),
+    },
+    {
+      id: 3,
+      url: "/uploads/selfie-sketch.png",
+      name: "Selfie Sketch",
+      convertedAt: new Date("2025-08-15"),
+    },
   ];
 
-  res.render('User/ToonifiedImages.ejs', { 
-    title: 'My Toonified Images',  // ✅ add this
-    images 
+  res.render("User/ToonifiedImages.ejs", {
+    title: "My Toonified Images", // ✅ add this
+    images,
   });
 });
 
