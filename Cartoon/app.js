@@ -59,13 +59,52 @@ app.get("/pricing", (req, res) => {
   res.render("Home/pricing.ejs");
 });
 
-app.all(/.*/, (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
+app.get("/userdashboard", (req, res) => {
+  res.render("User/Explore.ejs", {
+    title: "Dashboard",
+    user: {
+      name: "John Doe",
+      email: "johndoe@email.com",
+      plan: "Free Plan",
+      uploads: 12,
+      conversions: 47,
+      status: "Active"
+    },
+    images: [
+      { url: "/images/sample1.png" },
+      { url: "/images/sample2.png" },
+      { url: "/images/sample3.png" }
+    ]
+  });
 });
 
-app.use((err, req, res, next) => {
-  let { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("error.ejs", { message });
+app.get("/profile", (req, res) => {
+  res.render("User/Profile.ejs", {
+    title: "My Profile",
+    user: {
+      name: "John Doe",
+      email: "johndoe@email.com",
+      plan: "Free Plan",
+      uploads: 12,
+      conversions: 47,
+      status: "Active",
+      avatar: "/images/user.png"
+    }
+  });
+});
+
+app.get('/toonifiedImages', (req, res) => {
+  // Dummy data
+  const images = [
+    { id: 1, url: '/uploads/dog-cartoon.png', name: 'Dog Cartoon', convertedAt: new Date('2025-08-01') },
+    { id: 2, url: '/uploads/cat-anime.png', name: 'Cat Anime', convertedAt: new Date('2025-08-10') },
+    { id: 3, url: '/uploads/selfie-sketch.png', name: 'Selfie Sketch', convertedAt: new Date('2025-08-15') }
+  ];
+
+  res.render('User/ToonifiedImages.ejs', { 
+    title: 'My Toonified Images',  // ✅ add this
+    images 
+  });
 });
 
 app.listen(3000, () => {
