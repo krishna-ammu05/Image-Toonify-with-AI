@@ -94,8 +94,35 @@ app.get("/profile", (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
+    const dashboardData = {
+        stats: {
+            totalUsers: 1200,
+            activeUsers: 876,
+            totalImages: 3400,
+            conversions: 2890,
+            revenue: "$12,450",
+            growth: "18%"
+        },
+        recentUsers: [
+            { name: "Alice Johnson", email: "alice@example.com", joined: "2025-08-01" },
+            { name: "Bob Smith", email: "bob@example.com", joined: "2025-08-05" },
+            { name: "Charlie Davis", email: "charlie@example.com", joined: "2025-08-08" }
+        ],
+        recentActivities: [
+            { action: "Uploaded image", user: "Alice Johnson", time: "2 mins ago" },
+            { action: "Cartoonified image", user: "Bob Smith", time: "10 mins ago" },
+            { action: "Upgraded plan", user: "Charlie Davis", time: "30 mins ago" }
+        ],
+        systemHealth: {
+            uptime: "99.98%",
+            serverLoad: "45%",
+            responseTime: "120ms"
+        }
+    };
+
     res.render('Admin/dashboard.ejs', { dashboardData });
 });
+
 
 
 app.get('/toonifiedImages', (req, res) => {
