@@ -93,6 +93,11 @@ app.get("/profile", (req, res) => {
   });
 });
 
+app.get('/dashboard', (req, res) => {
+    res.render('Admin/dashboard.ejs', { dashboardData });
+});
+
+
 app.get('/toonifiedImages', (req, res) => {
   // Dummy data
   const images = [

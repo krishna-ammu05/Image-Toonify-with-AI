@@ -1,86 +1,124 @@
 <%- layout('User/user_Boilerplate') -%>
 
-<div class="container-fluid">
+<%
+const user = {
+  name: "Alex Johnson",
+  email: "alex.johnson@company.com",
+  plan: "Professional",
+  uploads: 247,
+  conversions: 189,
+  status: "Active",
+  avatar: "/images/user.png"
+};
+
+const images = [
+  { original: "https://picsum.photos/300/200?random=1", cartoon: "https://picsum.photos/300/200?random=11", name: "portrait_001.jpg", date: "2024-01-15", style: "Cartoon" },
+  { original: "https://picsum.photos/300/200?random=2", cartoon: "https://picsum.photos/300/200?random=12", name: "landscape_002.jpg", date: "2024-01-14", style: "Anime" },
+  { original: "https://picsum.photos/300/200?random=3", cartoon: "https://picsum.photos/300/200?random=13", name: "photo_003.jpg", date: "2024-01-13", style: "Sketch" },
+];
+%>
+
+<div class="container-fluid py-4">
   <!-- Topbar -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <input type="text" class="form-control w-25" placeholder="Search...">
+  <div class="d-flex justify-content-between align-items-center bg-white shadow-sm p-3 rounded mb-4">
+    <input type="text" class="form-control w-50" placeholder="🔍 Search images, styles...">
     <div class="d-flex align-items-center gap-3">
-      <button class="btn btn-light">🔔</button>
-      <img src="/images/avatar.png" class="rounded-circle" width="40" height="40">
+      <small class="text-muted">Credits: <strong>1250</strong></small>
+      <button class="btn btn-dark position-relative">
+        🔔
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+      </button>
+      <img src="<%= user.avatar %>" class="rounded-circle border shadow" width="45" height="45">
     </div>
   </div>
 
-  <!-- User Overview + Pricing + Activity -->
+  <!-- User + Plan + Activity -->
   <div class="row g-4 mb-4">
-    <!-- User Overview -->
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <div class="d-flex align-items-center gap-3">
-          <img src="/images/user.png" class="rounded-circle" width="60" height="60">
+    <!-- User -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card shadow-sm border-0 rounded p-3">
+        <div class="d-flex gap-3 align-items-center mb-3">
+          <img src="<%= user.avatar %>" class="rounded-circle border shadow" width="70" height="70">
           <div>
-            <h5><%= user.name %></h5>
-            <p class="text-muted"><%= user.email %></p>
-            <span class="badge bg-primary"><%= user.plan %></span>
+            <h5 class="mb-1 fw-bold"><%= user.name %></h5>
+            <p class="mb-1 text-muted"><%= user.email %></p>
+            <span class="badge bg-dark"><%= user.plan %></span>
           </div>
         </div>
-        <div class="d-flex justify-content-between text-center mt-3">
-          <div><h6><%= user.uploads %></h6><small>Uploads</small></div>
-          <div><h6><%= user.conversions %></h6><small>Conversions</small></div>
-          <div><h6><%= user.status %></h6><small>Status</small></div>
+        <div class="d-flex justify-content-between text-center">
+          <div>
+            <h6 class="fw-bold mb-0"><%= user.uploads %></h6>
+            <small class="text-muted">Uploads</small>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-0"><%= user.conversions %></h6>
+            <small class="text-muted">Conversions</small>
+          </div>
+          <div>
+            
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Pricing -->
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <h5>Pricing</h5>
-        <ul class="list-unstyled mt-2">
-          <li>Free – $0</li>
-          <li>Pro – $9/month</li>
-          <li>Premium – $19/month</li>
+    <!-- Subscription -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card bg-dark text-white shadow-sm border-0 rounded p-3">
+        <h6 class="fw-bold mb-3">💼 Plans</h6>
+        <ul class="list-unstyled small">
+          <li><strong>Basic</strong> – Free (10 conv/month)</li>
+          <li><strong>Professional</strong> – $19/month</li>
+          <li><strong>Enterprise</strong> – $49/month</li>
         </ul>
-        <button class="btn btn-primary w-100 mt-2">Upgrade Now</button>
+        <button class="btn btn-light w-100 fw-bold">Upgrade</button>
+        <small class="d-block text-center mt-2">Current: <%= user.plan %></small>
       </div>
     </div>
 
-    <!-- Recent Activity -->
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <h5>Recent Activity</h5>
-        <ul class="list-unstyled small mt-2">
-          <li>✅ Your image <b>dog.png</b> was toonified</li>
-          <li>🎨 New style <b>Anime Art</b> added</li>
-          <li>⚠️ Subscription expires in 3 days</li>
-        </ul>
+    <!-- Activity -->
+    <div class="col-lg-4 col-md-12">
+      <div class="card shadow-sm border-0 rounded p-3">
+        <h6 class="fw-bold mb-3">📋 Recent Activity</h6>
+        <div class="overflow-auto" style="max-height:220px;">
+         
+            <div class="mb-2 small p-2 rounded bg-light">
+             
+             
+            </div>
+         
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- My Toonified Images -->
-  <h4 class="mb-3">My Toonified Images</h4>
-  <div class="row g-3">
+  <!-- Gallery -->
+  <h4 class="fw-bold mb-3">📸 My Gallery (Original vs Cartoon)</h4>
+  <div class="row g-4">
     <% images.forEach(img => { %>
-      <div class="col-6 col-md-3">
-        <div class="card shadow-sm">
-          <img src="<%= img.url %>" class="card-img-top rounded">
-          <div class="card-body text-center">
-            <button class="btn btn-sm btn-primary">Download</button>
-            <button class="btn btn-sm btn-outline-secondary">Share</button>
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm border-0 rounded overflow-hidden">
+          <div class="row g-0">
+            <!-- Original -->
+            <div class="col-6">
+              <img src="<%= img.original %>" class="w-100 h-100" style="object-fit:cover;" alt="Original">
+              <div class="text-center bg-light py-1 small">Original</div>
+            </div>
+            <!-- Cartoon -->
+            <div class="col-6">
+              <img src="<%= img.cartoon %>" class="w-100 h-100" style="object-fit:cover;" alt="Cartoon">
+              <div class="text-center bg-primary text-white py-1 small"><%= img.style %></div>
+            </div>
+          </div>
+          <div class="card-body p-2 text-center">
+            <small class="fw-bold d-block"><%= img.name %></small>
+            <small class="text-muted"><%= img.date %></small>
+            <div class="mt-2">
+              <button class="btn btn-success btn-sm">📥 Download</button>
+              <button class="btn btn-outline-primary btn-sm">🔗 Share</button>
+            </div>
           </div>
         </div>
       </div>
     <% }) %>
-  </div>
-
-  <!-- Upload New Image -->
-  <div class="mt-5">
-    <div class="card shadow-sm p-5 text-center border-dashed">
-      <p class="text-muted">Drag & Drop or Select a File</p>
-      <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="image" class="form-control mb-3">
-        <button type="submit" class="btn btn-success">Convert</button>
-      </form>
-    </div>
   </div>
 </div>
