@@ -6,9 +6,9 @@ const { saveRedirectUrl } = require("../middleware.js");
 const User = require("../models/users");
 
 router
-  .route("/signup")
+  .route("/register")
   .get((req, res) => {
-    res.render("auth/signUp.ejs");
+    res.render("auth/register.ejs");
   })
   .post(
     wrapAsync(async (req, res) => {
