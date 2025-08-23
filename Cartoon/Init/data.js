@@ -1,4 +1,4 @@
-module.exports.images = await Image.insertMany([
+module.exports = [
   {
     title: "Cute Dog",
     originalImage:
@@ -79,4 +79,4 @@ module.exports.images = await Image.insertMany([
       "https://cdn.pixabay.com/photo/2013/07/12/17/43/landscape-152050_960_720.png",
     filter: "pencil",
   },
-]);
+];

@@ -1,34 +1,41 @@
-import mongoose from "mongoose";
-import User from "../models/users.js";
-import Image from "../models/image.js";
-import { images } from "./data.js";
+const mongoose = require("mongoose");
+const User = require("../models/users.js");
+const Image = require("../models/image");
+const images = require("./data.js");
 
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/toonify");
-  console.log("DB Connected ✅");
+  console.log("DB Connected Successfully 🚀");
 }
 
 async function seedDB() {
-  await main();
+  try {
+    await main();
 
-  await User.deleteMany({});
-  await Image.deleteMany({});
-  console.log("Old data removed 🗑️");
+    // Clear existing data
+    // await User.deleteMany({});
+    // await Image.deleteMany({});
+    // console.log("Old data removed 🗑️");
 
-  const insertedImages = await Image.insertMany(images);
-  console.log(`${insertedImages.length} images inserted 📸`);
+    // Insert all images
+    const insertedImages = await Image.insertMany(images);
+    console.log(`${insertedImages.length} images inserted ✅`);
 
-  const user = new User({
-    username: "johndoe",
-    email: "johndoe@email.com",
-    images: insertedImages.map((img) => img._id),
-  });
+    // Create new user
+    const user = new User({
+      username: "johndoe",
+      email: "johndoe@email.com",
+      images: insertedImages.map((img) => img._id),
+    });
 
-  await User.register(user, "password123");
-  console.log("Sample user created 👤 with linked images");
+    await User.register(user, "password123"); // passport-local-mongoose
+    console.log("User created ✅");
 
-  await mongoose.connection.close();
-  console.log("DB connection closed 🚪");
+    await mongoose.connection.close();
+    console.log("DB connection closed 🚪");
+  } catch (err) {
+    console.error("Error seeding DB ❌", err);
+  }
 }
 
-seedDB().catch(console.error);
+seedDB();
