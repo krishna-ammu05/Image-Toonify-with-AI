@@ -56,7 +56,7 @@ app.get("/", (req, res) => {
 app.use("/", authRouter);
 
 app.get("/pricing", (req, res) => {
-  res.render("Home/pricing.ejs");
+  res.render("User/pricing.ejs");
 });
 
 app.get("/userdashboard", (req, res) => {
@@ -149,9 +149,14 @@ app.get('/toonifiedImages', (req, res) => {
   ];
 
   res.render("User/ToonifiedImages.ejs", {
-    title: "My Toonified Images", // ✅ add this
+    title: "My Toonified Images", //  add this
     images,
   });
+});
+
+
+app.get('/settings', (req, res) => {
+  res.render('User/settings'); // No title needed, layout will handle sidebar
 });
 
 app.listen(3000, () => {
