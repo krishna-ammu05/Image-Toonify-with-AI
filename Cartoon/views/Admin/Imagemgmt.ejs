@@ -1,0 +1,68 @@
+<% layout('Admin/admin_Boilerplate') %>
+
+<h3 class="mb-4">Images Management</h3>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="mb-3 d-flex justify-content-between">
+      <h5>All Uploaded & Converted Images</h5>
+      <a href="/admin/images/upload" class="btn btn-primary btn-sm">Upload New Image</a>
+    </div>
+
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Original Image</th>
+          <th>Converted Image</th>
+          <th>Styles/Effects</th>
+          <th>File Name</th>
+          <th>Uploaded By</th>
+          <th>Upload Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% images.forEach(function(image, index){ %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td>
+            <img src="<%= image.originalUrl %>" alt="Original" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+          </td>
+          <td>
+            <% if(image.convertedUrl){ %>
+            <img src="<%= image.convertedUrl %>" alt="Converted" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+            <% } else { %>
+              <span class="text-muted">Not Converted</span>
+            <% } %>
+          </td>
+          <td>
+            <% if(image.styles && image.styles.length > 0){ %>
+              <%= image.styles.join(', ') %>
+            <% } else { %>
+              <span class="text-muted">None</span>
+            <% } %>
+          </td>
+          <td><%= image.filename %></td>
+          <td><%= image.uploadedBy %></td>
+          <td><%= image.uploadDate.toDateString() %></td>
+          <td>
+            <% if(image.status === 'active'){ %>
+              <span class="badge bg-success">Active</span>
+            <% } else { %>
+              <span class="badge bg-secondary">Inactive</span>
+            <% } %>
+          </td>
+          <td>
+            <a href="/admin/images/edit/<%= image._id %>" class="btn btn-sm btn-warning">Edit</a>
+            <form action="/admin/images/delete/<%= image._id %>" method="POST" style="display:inline-block;">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this image?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>

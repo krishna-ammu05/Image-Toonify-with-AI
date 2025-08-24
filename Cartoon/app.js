@@ -154,10 +154,94 @@ app.get('/toonifiedImages', (req, res) => {
   });
 });
 
-
 app.get('/settings', (req, res) => {
   res.render('User/settings'); // No title needed, layout will handle sidebar
 });
+
+app.get("/userManagement", (req, res) => {
+  const users = [
+    { _id: "1", name: "Krish", email: "krish@example.com", role: "Admin" },
+    { _id: "2", name: "Ravi", email: "ravi@example.com", role: "User" },
+    { _id: "3", name: "Anita", email: "anita@example.com", role: "Moderator" }
+  ];
+
+  res.render("Admin/Usersmgmt.ejs", { 
+    users, 
+    activePage: "users"  
+  });
+});
+
+app.get("/imageManagement", (req, res) => {
+  const images = [
+    {
+      _id: "1",
+      originalUrl: "/images/sample1.jpg",
+      convertedUrl: "/images/sample1_cartoon.jpg",
+      styles: ["Cartoon", "Oil Painting"],
+      filename: "sample1.jpg",
+      uploadedBy: "Admin",
+      uploadDate: new Date("2025-08-20"),
+      status: "active"
+    },
+    {
+      _id: "2",
+      originalUrl: "/images/sample2.jpg",
+      convertedUrl: "",
+      styles: [],
+      filename: "sample2.jpg",
+      uploadedBy: "User1",
+      uploadDate: new Date("2025-08-21"),
+      status: "inactive"
+    },
+    {
+      _id: "3",
+      originalUrl: "/images/sample3.jpg",
+      convertedUrl: "/images/sample3_cartoon.jpg",
+      styles: ["Sketch"],
+      filename: "sample3.jpg",
+      uploadedBy: "User2",
+      uploadDate: new Date("2025-08-22"),
+      status: "active"
+    }
+  ];
+
+  res.render("Admin/imagemgmt.ejs", {
+    images,
+    activePage: "images"
+  });
+});
+
+
+
+// app.get("/dashboard", (req, res) => {
+//   res.render("Admin/Dashboard", { activePage: "dashboard" });
+// });
+
+// app.get("/users", (req, res) => {
+//   res.render("Admin/Usersmgmt", { activePage: "users" });
+// });
+
+// app.get("/images", (req, res) => {
+//   res.render("Admin/Images", { activePage: "images" });
+// });
+
+// app.get("/subscriptions", (req, res) => {
+//   res.render("Admin/Subscriptions", { activePage: "subscriptions" });
+// });
+
+// app.get("/payments", (req, res) => {
+//   res.render("Admin/Payments", { activePage: "payments" });
+// });
+
+// app.get("/system-health", (req, res) => {
+//   res.render("Admin/SystemHealth", { activePage: "system-health" });
+// });
+//res.render("Admin/Usersmgmt", { layout: "Admin/admin_Boilerplate", users });
+
+app.get("/settings", (req, res) => {
+  res.render("Admin/Settings", { activePage: "settings" });
+});
+
 
 app.listen(3000, () => {
   console.log("Server is running at port 3000");
