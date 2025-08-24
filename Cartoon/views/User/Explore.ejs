@@ -1,124 +1,223 @@
-<%- layout('User/user_Boilerplate') -%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toonify Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #fdfbfb, #ebedee);
+      min-height: 100vh;
+      transition: all 0.3s ease-in-out;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-<%
-const user = {
-  name: "Alex Johnson",
-  email: "alex.johnson@company.com",
-  plan: "Professional",
-  uploads: 247,
-  conversions: 189,
-  status: "Active",
-  avatar: "/images/user.png"
-};
+    /* Sidebar */
+    .sidebar {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #0d6efd, #1a73e8);
+      color: white;
+      transition: background 0.3s;
+    }
+    .sidebar h3 {
+      font-weight: bold;
+      color: #fff;
+    }
+    .sidebar .nav-link {
+      color: #f1f1f1;
+      font-weight: 500;
+      border-radius: 12px;
+      margin: 4px 0;
+      transition: all 0.3s;
+    }
+    .sidebar .nav-link:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateX(5px);
+    }
+    .sidebar .nav-link.active {
+      background: #fff !important;
+      color: #0d6efd !important;
+      font-weight: bold;
+    }
+    body {
+      background: linear-gradient(135deg, #e0f7fa, #fffde7, #fce4ec);
+      min-height: 100vh;
+      transition: all 0.3s ease-in-out;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-const images = [
-  { original: "https://picsum.photos/300/200?random=1", cartoon: "https://picsum.photos/300/200?random=11", name: "portrait_001.jpg", date: "2024-01-15", style: "Cartoon" },
-  { original: "https://picsum.photos/300/200?random=2", cartoon: "https://picsum.photos/300/200?random=12", name: "landscape_002.jpg", date: "2024-01-14", style: "Anime" },
-  { original: "https://picsum.photos/300/200?random=3", cartoon: "https://picsum.photos/300/200?random=13", name: "photo_003.jpg", date: "2024-01-13", style: "Sketch" },
-];
-%>
+/* Dark mode background */
+    body.dark-mode {
+       background: linear-gradient(135deg, #1e1e2f, #2c2c3e, #1a1a2e);
+       color: #f1f1f1;
+}
 
-<div class="container-fluid py-4">
-  <!-- Topbar -->
-  <div class="d-flex justify-content-between align-items-center bg-white shadow-sm p-3 rounded mb-4">
-    <input type="text" class="form-control w-50" placeholder="🔍 Search images, styles...">
-    <div class="d-flex align-items-center gap-3">
-      <small class="text-muted">Credits: <strong>1250</strong></small>
-      <button class="btn btn-dark position-relative">
-        🔔
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
-      </button>
-      <img src="<%= user.avatar %>" class="rounded-circle border shadow" width="45" height="45">
-    </div>
-  </div>
+    /* Topbar */
+    .topbar {
+      background: linear-gradient(90deg, #ffecd2, #fcb69f);
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    }
+    .topbar input {
+      border: none;
+      background: transparent;
+    }
+    .topbar input::placeholder {
+      color: #888;
+    }
 
-  <!-- User + Plan + Activity -->
-  <div class="row g-4 mb-4">
-    <!-- User -->
-    <div class="col-lg-4 col-md-6">
-      <div class="card shadow-sm border-0 rounded p-3">
-        <div class="d-flex gap-3 align-items-center mb-3">
-          <img src="<%= user.avatar %>" class="rounded-circle border shadow" width="70" height="70">
-          <div>
-            <h5 class="mb-1 fw-bold"><%= user.name %></h5>
-            <p class="mb-1 text-muted"><%= user.email %></p>
-            <span class="badge bg-dark"><%= user.plan %></span>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between text-center">
-          <div>
-            <h6 class="fw-bold mb-0"><%= user.uploads %></h6>
-            <small class="text-muted">Uploads</small>
-          </div>
-          <div>
-            <h6 class="fw-bold mb-0"><%= user.conversions %></h6>
-            <small class="text-muted">Conversions</small>
-          </div>
-          <div>
-            
-          </div>
-        </div>
-      </div>
-    </div>
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: 16px;
+      transition: all 0.3s ease-in-out;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+    }
 
-    <!-- Subscription -->
-    <div class="col-lg-4 col-md-6">
-      <div class="card bg-dark text-white shadow-sm border-0 rounded p-3">
-        <h6 class="fw-bold mb-3">💼 Plans</h6>
-        <ul class="list-unstyled small">
-          <li><strong>Basic</strong> – Free (10 conv/month)</li>
-          <li><strong>Professional</strong> – $19/month</li>
-          <li><strong>Enterprise</strong> – $49/month</li>
+    /* Gallery images */
+    .gallery-img {
+      border-radius: 12px;
+      transition: transform 0.3s;
+    }
+    .gallery-img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Dark mode */
+    body.dark-mode {
+      background: #1e1e2f;
+      color: #f1f1f1;
+    }
+    body.dark-mode .topbar {
+      background: linear-gradient(90deg,#2c3e50,#4ca1af);
+    }
+    body.dark-mode .sidebar {
+      background: linear-gradient(180deg, #111827, #1f2937);
+    }
+    body.dark-mode .card {
+      background: #2c2c3e;
+      color: #f1f1f1;
+    }
+    body.dark-mode .gallery-img {
+      border: 2px solid #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      
+      <!-- Sidebar -->
+      <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3">
+        <h3 class="text-center mb-4">🎨 Toonify</h3>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link active" href="/userdashboard"><i class="bi bi-house-door me-2"></i> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/profile"><i class="bi bi-person me-2"></i> My Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="/toonifiedImages"><i class="bi bi-images me-2"></i> My Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="/pricing"><i class="bi bi-cash-stack me-2"></i> Pricing</a></li>
+          <li class="nav-item"><a class="nav-link" href="/upload"><i class="bi bi-upload me-2"></i> Toonify Image</a></li>
+          <li class="nav-item"><a class="nav-link" href="/settings"><i class="bi bi-gear me-2"></i> Settings</a></li>
+          <li class="nav-item"><a class="nav-link text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
         </ul>
-        <button class="btn btn-light w-100 fw-bold">Upgrade</button>
-        <small class="d-block text-center mt-2">Current: <%= user.plan %></small>
-      </div>
-    </div>
+      </nav>
 
-    <!-- Activity -->
-    <div class="col-lg-4 col-md-12">
-      <div class="card shadow-sm border-0 rounded p-3">
-        <h6 class="fw-bold mb-3">📋 Recent Activity</h6>
-        <div class="overflow-auto" style="max-height:220px;">
-         
-            <div class="mb-2 small p-2 rounded bg-light">
-             
-             
-            </div>
-         
-        </div>
-      </div>
-    </div>
-  </div>
+      <!-- Main Content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        
+        <!-- Topbar -->
 
-  <!-- Gallery -->
-  <h4 class="fw-bold mb-3">📸 My Gallery (Original vs Cartoon)</h4>
-  <div class="row g-4">
-    <% images.forEach(img => { %>
-      <div class="col-md-6 col-lg-4">
-        <div class="card shadow-sm border-0 rounded overflow-hidden">
-          <div class="row g-0">
-            <!-- Original -->
-            <div class="col-6">
-              <img src="<%= img.original %>" class="w-100 h-100" style="object-fit:cover;" alt="Original">
-              <div class="text-center bg-light py-1 small">Original</div>
-            </div>
-            <!-- Cartoon -->
-            <div class="col-6">
-              <img src="<%= img.cartoon %>" class="w-100 h-100" style="object-fit:cover;" alt="Cartoon">
-              <div class="text-center bg-primary text-white py-1 small"><%= img.style %></div>
-            </div>
-          </div>
-          <div class="card-body p-2 text-center">
-            <small class="fw-bold d-block"><%= img.name %></small>
-            <small class="text-muted"><%= img.date %></small>
-            <div class="mt-2">
-              <button class="btn btn-success btn-sm">📥 Download</button>
-              <button class="btn btn-outline-primary btn-sm">🔗 Share</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% }) %>
+<div class="d-flex justify-content-between align-items-center shadow-sm p-2 px-3 rounded-pill bg-light mb-4 mt-3">
+  <div class="d-flex align-items-center flex-grow-1">
+    <!-- Search -->
+    <form class="d-flex flex-grow-1 rounded-pill border overflow-hidden me-3">
+      <input class="form-control border-0" type="search" placeholder="Search images, styles..." aria-label="Search">
+    </form>
+    <button type="button" class="btn btn-primary me-3">
+      <i class="bi bi-magic"></i> Toonify
+    </button>
+    <button id="modeToggle" class="btn btn-outline-secondary me-3">
+      <i class="bi bi-moon"></i>
+    </button>
+    <a href="#" class="btn btn-outline-primary">
+      <i class="bi bi-person-circle"></i>
+    </a>
   </div>
 </div>
+
+
+        <!-- User Details -->
+        <div class="row my-4">
+          <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+              <h5 id="userName">John Doe</h5>
+              <p id="userEmail">johndoe@email.com</p>
+              <span class="badge bg-success" id="userPlan">Free Plan</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card shadow-sm p-3 text-center">
+              <h6>Usage Stats</h6>
+              <div class="d-flex justify-content-around mt-3">
+                <div>
+                  <strong id="uploads">12</strong><br>Uploads
+                </div>
+                <div>
+                  <strong id="conversions">47</strong><br>Conversions
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Gallery -->
+        <h4 class="mb-3">📸 My Gallery (Original vs Cartoon)</h4>
+        <div class="row g-3">
+          <!-- Example Dynamic Gallery Card -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm p-2">
+              <div class="row">
+                <div class="col-6">
+                  <img src="original.jpg" class="img-fluid gallery-img" alt="Original">
+                  <p class="text-center mt-1">Original</p>
+                </div>
+                <div class="col-6">
+                  <img src="cartoon.jpg" class="img-fluid gallery-img" alt="Cartoon">
+                  <p class="text-center mt-1">Cartoon</p>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between mt-2">
+                <button class="btn btn-success btn-sm"><i class="bi bi-download"></i> Download</button>
+                <button class="btn btn-outline-primary btn-sm"><i class="bi bi-share"></i> Share</button>
+              </div>
+            </div>
+          </div>
+          <!-- Repeat dynamically with backend data -->
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Dark/Light mode toggle
+    const modeBtn = document.getElementById("modeToggle");
+    modeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      const icon = modeBtn.querySelector("i");
+      if (document.body.classList.contains("dark-mode")) {
+        icon.classList.replace("bi-moon", "bi-brightness-high");
+      } else {
+        icon.classList.replace("bi-brightness-high", "bi-moon");
+      }
+    });
+  </script>
+</body>
+</html>
