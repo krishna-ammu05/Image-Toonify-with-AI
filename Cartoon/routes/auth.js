@@ -13,17 +13,19 @@ router
   .post(
     wrapAsync(async (req, res) => {
       try {
-        let { email, username, password } = req.body.user;
+        let { email, username, fullname, password } = req.body.user;
         let newUser = new User({
           email: email,
           username: username,
+          fullname: fullname,
         });
         let registereduser = await User.register(newUser, password);
         req.login(registereduser, (err) => {
           if (err) {
-            return next(err);
+            console.error("Login after register failed:", err);
+            return res.redirect("/login");
           }
-          res.redirect("/userdashboard");
+          res.redirect(`/${registereduser.username}/dashboard`);
         });
       } catch (err) {
         res.redirect("/register");
@@ -44,7 +46,8 @@ router
       failureFlash: true,
     }),
     async (req, res) => {
-      let redirectUrl = res.locals.redirectUrl || "/explore";
+      let redirectUrl =
+        res.locals.redirectUrl || `/${req.user.username}/dashboard`;
       res.redirect(redirectUrl);
     }
   );

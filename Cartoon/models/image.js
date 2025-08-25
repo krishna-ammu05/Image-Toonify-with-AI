@@ -13,7 +13,7 @@ const imageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  filter: {
+  style: {
     type: String,
     enum: ["cartoon", "sketch", "pencil"],
     default: "cartoon",
@@ -21,6 +21,11 @@ const imageSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  //store which user uploaded this image
+  uploadedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
 });
 

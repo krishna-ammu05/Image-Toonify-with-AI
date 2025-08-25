@@ -1,0 +1,128 @@
+<% layout('User/user_Boilerplate') -%>
+<body class="bg-light">
+  <div class="container my-5">
+    <!-- User Details -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="card shadow-lg border-0 rounded-4 p-4 h-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <h4 class="fw-bold text-primary mb-1" id="userName">
+                <%= user.fullname %>
+              </h4>
+              <p class="text-muted mb-1" id="userEmail"><%= user.email %></p>
+              <span
+                class="badge bg-gradient bg-success px-3 py-2"
+                id="userPlan"
+              >
+                <%= user.plan %>
+              </span>
+            </div>
+            <i
+              class="bi bi-person-circle text-secondary"
+              style="font-size: 2rem"
+            ></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card shadow-lg border-0 rounded-4 p-4 text-center h-100">
+          <h6 class="text-uppercase text-muted">Usage Stats</h6>
+          <div class="d-flex justify-content-around mt-3">
+            <div>
+              <strong class="fs-5 text-dark" id="uploads"
+                ><%= user.uploads %></strong
+              >
+              <p class="text-muted small mb-0">Uploads</p>
+            </div>
+            <div>
+              <strong class="fs-5 text-dark" id="conversions"
+                ><%= user.conversions %></strong
+              >
+              <p class="text-muted small mb-0">Conversions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Gallery -->
+    <h4 class="fw-bold text-secondary mb-4">📸 My Gallery</h4>
+    <div class="row g-4">
+      <% if (images.length === 0) { %>
+      <p class="text-muted">No images uploaded yet.</p>
+      <% } else { %> <% images.forEach(image => { %>
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+          <div class="row g-0">
+            <div class="col-6 p-2">
+              <img
+                src="<%= image.originalImage %>"
+                class="img-fluid rounded gallery-img shadow-sm"
+                alt="Original"
+              />
+              <p class="text-center small text-muted mt-1">Original</p>
+            </div>
+            <div class="col-6 p-2">
+              <img
+                src="<%= image.cartoonImage %>"
+                class="img-fluid rounded gallery-img shadow-sm"
+                alt="Cartoon"
+              />
+              <p class="text-center small text-muted mt-1">Cartoon</p>
+            </div>
+          </div>
+          <div
+            class="card-footer bg-white border-0 d-flex justify-content-between px-3 py-2"
+          >
+            <a
+              href="<%= image.cartoonImage %>"
+              download
+              class="btn btn-success btn-sm rounded-pill px-3"
+            >
+              <i class="bi bi-download"></i> Download
+            </a>
+            <button class="btn btn-outline-primary btn-sm rounded-pill px-3">
+              <i class="bi bi-share"></i> Share
+            </button>
+          </div>
+        </div>
+      </div>
+      <% }) %> <% } %>
+    </div>
+  </div>
+
+  <script>
+    // Dark/Light mode toggle
+    const modeBtn = document.getElementById("modeToggle");
+    if (modeBtn) {
+      modeBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        const icon = modeBtn.querySelector("i");
+        if (document.body.classList.contains("dark-mode")) {
+          icon.classList.replace("bi-moon", "bi-brightness-high");
+        } else {
+          icon.classList.replace("bi-brightness-high", "bi-moon");
+        }
+      });
+    }
+  </script>
+
+  <style>
+    .gallery-img {
+      transition: transform 0.3s ease-in-out;
+    }
+    .gallery-img:hover {
+      transform: scale(1.05);
+    }
+    body.dark-mode {
+      background: linear-gradient(135deg, #1e1e2f, #2c2c3e, #1a1a2e);
+      color: #f1f1f1;
+    }
+    body.dark-mode .card {
+      background: #2c2c3e;
+      color: #f1f1f1;
+    }
+  </style>
+</body>

@@ -9,6 +9,7 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/users.js");
 
 const authRouter = require("./routes/auth.js");
+const userRouter = require("./routes/user.js");
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -48,6 +49,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser()); //serialize users into session(login)
 passport.deserializeUser(User.deserializeUser()); //deserialize users into session(logout)
 
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user; // make user available globally
+  next();
+});
+
 app.get("/", (req, res) => {
   res.render("Home/Home.ejs");
 });
@@ -55,193 +61,113 @@ app.get("/", (req, res) => {
 //Auth Route Handlier
 app.use("/", authRouter);
 
-app.get("/pricing", (req, res) => {
-  res.render("User/pricing.ejs");
-});
+//user handler
+app.use("/:username", userRouter);
 
-app.get("/userdashboard", (req, res) => {
-  res.render("User/Explore.ejs", {
-    title: "Dashboard",
-    user: {
-      name: "John Doe",
-      email: "johndoe@email.com",
-      plan: "Free Plan",
-      uploads: 12,
-      conversions: 47,
-      status: "Active",
-    },
-    images: [
-      { url: "/images/sample1.png" },
-      { url: "/images/sample2.png" },
-      { url: "/images/sample3.png" },
-    ],
-  });
-});
+// app.get("/pricing", (req, res) => {
+//   res.render("Home/pricing.ejs");
+// });
 
-app.get("/profile", (req, res) => {
-  res.render("User/Profile.ejs", {
-    title: "My Profile",
-    user: {
-      name: "John Doe",
-      email: "johndoe@email.com",
-      plan: "Free Plan",
-      uploads: 12,
-      conversions: 47,
-      status: "Active",
-      avatar: "/images/user.png",
-    },
-  });
-});
+// app.get("/:id/dashboard", (req, res) => {
+//   res.render("User/Explore.ejs", {
+//     title: "Dashboard",
+//     user: {
+//       name: "John Doe",
+//       email: "johndoe@email.com",
+//       plan: "Free Plan",
+//       uploads: 12,
+//       conversions: 47,
+//       status: "Active",
+//     },
+//     images: [
+//       { url: "/images/sample1.png" },
+//       { url: "/images/sample2.png" },
+//       { url: "/images/sample3.png" },
+//     ],
+//   });
+// });
 
-app.get('/dashboard', (req, res) => {
-    const dashboardData = {
-        stats: {
-            totalUsers: 1200,
-            activeUsers: 876,
-            totalImages: 3400,
-            conversions: 2890,
-            revenue: "$12,450",
-            growth: "18%"
-        },
-        recentUsers: [
-            { name: "Alice Johnson", email: "alice@example.com", joined: "2025-08-01" },
-            { name: "Bob Smith", email: "bob@example.com", joined: "2025-08-05" },
-            { name: "Charlie Davis", email: "charlie@example.com", joined: "2025-08-08" }
-        ],
-        recentActivities: [
-            { action: "Uploaded image", user: "Alice Johnson", time: "2 mins ago" },
-            { action: "Cartoonified image", user: "Bob Smith", time: "10 mins ago" },
-            { action: "Upgraded plan", user: "Charlie Davis", time: "30 mins ago" }
-        ],
-        systemHealth: {
-            uptime: "99.98%",
-            serverLoad: "45%",
-            responseTime: "120ms"
-        }
-    };
-
-    res.render('Admin/dashboard.ejs', { dashboardData });
-});
-
-
-
-app.get('/toonifiedImages', (req, res) => {
-  // Dummy data
-  const images = [
-    {
-      id: 1,
-      url: "/uploads/dog-cartoon.png",
-      name: "Dog Cartoon",
-      convertedAt: new Date("2025-08-01"),
-    },
-    {
-      id: 2,
-      url: "/uploads/cat-anime.png",
-      name: "Cat Anime",
-      convertedAt: new Date("2025-08-10"),
-    },
-    {
-      id: 3,
-      url: "/uploads/selfie-sketch.png",
-      name: "Selfie Sketch",
-      convertedAt: new Date("2025-08-15"),
-    },
-  ];
-
-  res.render("User/ToonifiedImages.ejs", {
-    title: "My Toonified Images", //  add this
-    images,
-  });
-});
-
-app.get('/settings', (req, res) => {
-  res.render('User/settings'); // No title needed, layout will handle sidebar
-});
-
-app.get("/userManagement", (req, res) => {
-  const users = [
-    { _id: "1", name: "Krish", email: "krish@example.com", role: "Admin" },
-    { _id: "2", name: "Ravi", email: "ravi@example.com", role: "User" },
-    { _id: "3", name: "Anita", email: "anita@example.com", role: "Moderator" }
-  ];
-
-  res.render("Admin/Usersmgmt.ejs", { 
-    users, 
-    activePage: "users"  
-  });
-});
-
-app.get("/imageManagement", (req, res) => {
-  const images = [
-    {
-      _id: "1",
-      originalUrl: "/images/sample1.jpg",
-      convertedUrl: "/images/sample1_cartoon.jpg",
-      styles: ["Cartoon", "Oil Painting"],
-      filename: "sample1.jpg",
-      uploadedBy: "Admin",
-      uploadDate: new Date("2025-08-20"),
-      status: "active"
-    },
-    {
-      _id: "2",
-      originalUrl: "/images/sample2.jpg",
-      convertedUrl: "",
-      styles: [],
-      filename: "sample2.jpg",
-      uploadedBy: "User1",
-      uploadDate: new Date("2025-08-21"),
-      status: "inactive"
-    },
-    {
-      _id: "3",
-      originalUrl: "/images/sample3.jpg",
-      convertedUrl: "/images/sample3_cartoon.jpg",
-      styles: ["Sketch"],
-      filename: "sample3.jpg",
-      uploadedBy: "User2",
-      uploadDate: new Date("2025-08-22"),
-      status: "active"
-    }
-  ];
-
-  res.render("Admin/imagemgmt.ejs", {
-    images,
-    activePage: "images"
-  });
-});
-
-
+// app.get("/profile", (req, res) => {
+//   res.render("User/Profile.ejs", {
+//     title: "My Profile",
+//     user: {
+//       name: "John Doe",
+//       email: "johndoe@email.com",
+//       plan: "Free Plan",
+//       uploads: 12,
+//       conversions: 47,
+//       status: "Active",
+//       avatar: "/images/user.png",
+//     },
+//   });
+// });
 
 // app.get("/dashboard", (req, res) => {
-//   res.render("Admin/Dashboard", { activePage: "dashboard" });
+//   const dashboardData = {
+//     stats: {
+//       totalUsers: 1200,
+//       activeUsers: 876,
+//       totalImages: 3400,
+//       conversions: 2890,
+//       revenue: "$12,450",
+//       growth: "18%",
+//     },
+//     recentUsers: [
+//       {
+//         name: "Alice Johnson",
+//         email: "alice@example.com",
+//         joined: "2025-08-01",
+//       },
+//       { name: "Bob Smith", email: "bob@example.com", joined: "2025-08-05" },
+//       {
+//         name: "Charlie Davis",
+//         email: "charlie@example.com",
+//         joined: "2025-08-08",
+//       },
+//     ],
+//     recentActivities: [
+//       { action: "Uploaded image", user: "Alice Johnson", time: "2 mins ago" },
+//       { action: "Cartoonified image", user: "Bob Smith", time: "10 mins ago" },
+//       { action: "Upgraded plan", user: "Charlie Davis", time: "30 mins ago" },
+//     ],
+//     systemHealth: {
+//       uptime: "99.98%",
+//       serverLoad: "45%",
+//       responseTime: "120ms",
+//     },
+//   };
+
+//   res.render("Admin/dashboard.ejs", { dashboardData });
 // });
 
-// app.get("/users", (req, res) => {
-//   res.render("Admin/Usersmgmt", { activePage: "users" });
+// app.get("/toonifiedImages", (req, res) => {
+//   // Dummy data
+//   const images = [
+//     {
+//       id: 1,
+//       url: "/uploads/dog-cartoon.png",
+//       name: "Dog Cartoon",
+//       convertedAt: new Date("2025-08-01"),
+//     },
+//     {
+//       id: 2,
+//       url: "/uploads/cat-anime.png",
+//       name: "Cat Anime",
+//       convertedAt: new Date("2025-08-10"),
+//     },
+//     {
+//       id: 3,
+//       url: "/uploads/selfie-sketch.png",
+//       name: "Selfie Sketch",
+//       convertedAt: new Date("2025-08-15"),
+//     },
+//   ];
+
+//   res.render("User/ToonifiedImages.ejs", {
+//     title: "My Toonified Images", // ✅ add this
+//     images,
+//   });
 // });
-
-// app.get("/images", (req, res) => {
-//   res.render("Admin/Images", { activePage: "images" });
-// });
-
-// app.get("/subscriptions", (req, res) => {
-//   res.render("Admin/Subscriptions", { activePage: "subscriptions" });
-// });
-
-// app.get("/payments", (req, res) => {
-//   res.render("Admin/Payments", { activePage: "payments" });
-// });
-
-// app.get("/system-health", (req, res) => {
-//   res.render("Admin/SystemHealth", { activePage: "system-health" });
-// });
-//res.render("Admin/Usersmgmt", { layout: "Admin/admin_Boilerplate", users });
-
-app.get("/settings", (req, res) => {
-  res.render("Admin/Settings", { activePage: "settings" });
-});
-
 
 app.listen(3000, () => {
   console.log("Server is running at port 3000");

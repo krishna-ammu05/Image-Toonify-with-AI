@@ -1,86 +1,52 @@
-<%- layout('layouts/boilerplate') -%>
+<% layout('User/user_Boilerplate') -%>
 
-<div class="container-fluid">
-  <!-- Topbar -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <input type="text" class="form-control w-25" placeholder="Search...">
-    <div class="d-flex align-items-center gap-3">
-      <button class="btn btn-light">🔔</button>
-      <img src="/images/avatar.png" class="rounded-circle" width="40" height="40">
-    </div>
-  </div>
+<section class="container mt-5">
+  <h2 class="text-center fw-bold text-primary mb-4">📤 Upload Image</h2>
 
-  <!-- User Overview + Pricing + Activity -->
-  <div class="row g-4 mb-4">
-    <!-- User Overview -->
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <div class="d-flex align-items-center gap-3">
-          <img src="/images/user.png" class="rounded-circle" width="60" height="60">
-          <div>
-            <h5><%= user.name %></h5>
-            <p class="text-muted"><%= user.email %></p>
-            <span class="badge bg-primary"><%= user.plan %></span>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between text-center mt-3">
-          <div><h6><%= user.uploads %></h6><small>Uploads</small></div>
-          <div><h6><%= user.conversions %></h6><small>Conversions</small></div>
-          <div><h6><%= user.status %></h6><small>Status</small></div>
-        </div>
-      </div>
-    </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+          <form
+            action="/<%= user.username %>/upload"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="mb-4">
+              <label for="image" class="form-label fw-semibold"
+                >Select Image</label
+              >
+              <input
+                type="file"
+                name="image"
+                id="image"
+                class="form-control"
+                required
+              />
+            </div>
 
-    <!-- Pricing -->
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <h5>Pricing</h5>
-        <ul class="list-unstyled mt-2">
-          <li>Free – $0</li>
-          <li>Pro – $9/month</li>
-          <li>Premium – $19/month</li>
-        </ul>
-        <button class="btn btn-primary w-100 mt-2">Upgrade Now</button>
-      </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <h5>Recent Activity</h5>
-        <ul class="list-unstyled small mt-2">
-          <li>✅ Your image <b>dog.png</b> was toonified</li>
-          <li>🎨 New style <b>Anime Art</b> added</li>
-          <li>⚠️ Subscription expires in 3 days</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- My Toonified Images -->
-  <h4 class="mb-3">My Toonified Images</h4>
-  <div class="row g-3">
-    <% images.forEach(img => { %>
-      <div class="col-6 col-md-3">
-        <div class="card shadow-sm">
-          <img src="<%= img.url %>" class="card-img-top rounded">
-          <div class="card-body text-center">
-            <button class="btn btn-sm btn-primary">Download</button>
-            <button class="btn btn-sm btn-outline-secondary">Share</button>
-          </div>
+            <button
+              type="submit"
+              class="btn btn-gradient w-100 rounded-pill fw-bold"
+            >
+              Upload
+            </button>
+          </form>
         </div>
       </div>
-    <% }) %>
-  </div>
-
-  <!-- Upload New Image -->
-  <div class="mt-5">
-    <div class="card shadow-sm p-5 text-center border-dashed">
-      <p class="text-muted">Drag & Drop or Select a File</p>
-      <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="image" class="form-control mb-3">
-        <button type="submit" class="btn btn-success">Convert</button>
-      </form>
     </div>
   </div>
-</div>
+</section>
+
+<style>
+  .btn-gradient {
+    background: linear-gradient(90deg, #4e73df, #1cc88a);
+    border: none;
+    color: white;
+    transition: 0.3s ease-in-out;
+  }
+  .btn-gradient:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+</style>

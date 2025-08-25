@@ -12,7 +12,7 @@
           <img src="<%= user.avatar || '/images/default-avatar.png' %>" 
                alt="Profile Picture" 
                class="rounded-circle mb-3" width="100" height="100">
-          <h5 class="card-title"><%= user.name %></h5>
+          <h5 class="card-title"><%= user.username %></h5>
           <p class="text-muted mb-1"><%= user.email %></p>
           <% if(user.phone){ %>
             <p class="text-muted"><%= user.phone %></p>
@@ -41,8 +41,17 @@
         <div class="card-body">
           <h5 class="card-title">Subscription & Plan</h5>
           <p>Current Plan: <strong><%= user.plan %></strong></p>
-          <p>Status: <span class="badge bg-success"><%= user.subscriptionStatus %></span></p>
-          <p>Renewal Date: <strong><%= user.renewalDate %></strong></p>
+          <p>Status: 
+            <span class="badge 
+              <%= user.status === 'Active' ? 'bg-success' : 
+                  user.status === 'Inactive' ? 'bg-warning text-dark' : 
+                  'bg-danger' %>">
+              <%= user.status %>
+            </span>
+          </p>
+          <p>Renewal Date: 
+            <strong><%= user.renewalDate ? user.renewalDate.toDateString() : 'N/A' %></strong>
+          </p>
           <div class="mt-3">
             <a href="/subscription/upgrade" class="btn btn-success me-2">Upgrade Plan</a>
             <a href="/subscription/cancel" class="btn btn-outline-secondary">Cancel Plan</a>
@@ -55,10 +64,14 @@
         <div class="card-body">
           <h5 class="card-title">Usage Stats</h5>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">Total Uploads: <strong><%= user.totalUploads %></strong></li>
-            <li class="list-group-item">Total Conversions: <strong><%= user.totalConversions %></strong></li>
-            <li class="list-group-item">Remaining Quota: <strong><%= user.remainingQuota %></strong></li>
-            <li class="list-group-item">Storage Used: <strong><%= user.storageUsed %> / <%= user.storageLimit %></strong></li>
+            <li class="list-group-item">Total Uploads: <strong><%= user.uploads %></strong></li>
+            <li class="list-group-item">Total Conversions: <strong><%= user.conversions %></strong></li>
+            <li class="list-group-item">Remaining Quota: 
+              <strong><%= user.remainingQuota || 'Unlimited' %></strong>
+            </li>
+            <li class="list-group-item">Storage Used: 
+              <strong><%= user.storageUsed || 0 %> / <%= user.storageLimit || '∞' %></strong>
+            </li>
           </ul>
         </div>
       </div>
@@ -72,7 +85,7 @@
             <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
           </div>
           <div class="mb-3">
-            <label class="form-label">Preferred Output Style</label>
+            <label class="form-label">Preferred Default Output Style</label>
             <select class="form-select">
               <option <%= user.outputStyle === 'Cartoon' ? 'selected' : '' %>>Cartoon</option>
               <option <%= user.outputStyle === 'Anime' ? 'selected' : '' %>>Anime</option>
@@ -94,7 +107,15 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <h5 class="card-title">Recent Activity</h5>
-          <p class="text-muted">No recent activity found.</p>
+          <% if(user.recentActivity && user.recentActivity.length > 0){ %>
+            <ul>
+              <% user.recentActivity.forEach(activity => { %>
+                <li><%= activity %></li>
+              <% }) %>
+            </ul>
+          <% } else { %>
+            <p class="text-muted">No recent activity found.</p>
+          <% } %>
         </div>
       </div>
     </div>
