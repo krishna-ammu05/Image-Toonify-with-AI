@@ -25,7 +25,7 @@ async function seedDB() {
     });
 
     await User.register(user, "john"); // passport-local-mongoose
-    console.log("User created ✅");
+    console.log("User created ");
 
     // Insert all images and assign uploadedBy = user._id
     const imagesWithUser = images.map((img) => ({
@@ -34,7 +34,7 @@ async function seedDB() {
     }));
 
     const insertedImages = await Image.insertMany(imagesWithUser);
-    console.log(`${insertedImages.length} images inserted ✅`);
+    console.log(`${insertedImages.length} images inserted `);
 
     await mongoose.connection.close();
     console.log("DB connection closed 🚪");
