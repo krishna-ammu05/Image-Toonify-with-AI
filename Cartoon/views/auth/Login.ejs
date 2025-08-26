@@ -1,29 +1,75 @@
 <%- layout("/layouts/boilerplate.ejs") -%>
 
+<!-- Lottie player (only if using animation) -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 <style>
+  body {
+    background: #f6f9fc;
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .auth-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+  }
+
   .auth-card {
     background: #ffffff;
-    border-radius: 15px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    padding: 2.5rem 2rem 2rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    max-width: 420px;
+    width: 100%;
   }
 
   .auth-title {
-    font-weight: bold;
+    font-weight: 700;
     color: #2c3e50;
     text-align: center;
+    font-size: 1.8rem;
+  }
+
+  .auth-title span {
+    color: #0072ff;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #34495e;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 0.75rem;
+    border: 1.5px solid #e5eaf0;
+    transition: 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #0072ff;
+    box-shadow: 0 0 8px rgba(0, 114, 255, 0.15);
   }
 
   .auth-btn {
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    background: linear-gradient(90deg, #6dd5ed, #2193b0);
     border: none;
     color: #fff;
     font-weight: 600;
     transition: 0.3s ease;
+    border-radius: 12px;
+    padding: 0.8rem;
   }
 
   .auth-btn:hover {
-    opacity: 0.85;
+    transform: translateY(-2px);
+    opacity: 0.9;
   }
 
   .auth-link {
@@ -33,7 +79,7 @@
   }
 
   .auth-link a {
-    color: #0072ff;
+    color: #2193b0;
     font-weight: 600;
     text-decoration: none;
   }
@@ -42,57 +88,103 @@
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
-    .auth-card {
-      padding: 1.5rem;
+  .auth-illustration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 2rem;
+  }
+
+  .auth-illustration img {
+    max-width: 450px;
+    width: 100%;
+    border-radius: 16px;
+  }
+
+  .page-footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 3rem;
+    padding: 1rem 0;
+    border-top: 1px solid #eaeaea;
+  }
+
+  @media (max-width: 992px) {
+    .auth-container {
+      flex-direction: column;
+      gap: 2rem;
     }
-    h1.auth-title {
-      font-size: 1.5rem;
+    .auth-illustration {
+      padding-left: 0;
     }
-    form input,
-    form button {
-      width: 100% !important;
+    .auth-illustration img {
+      max-width: 320px;
     }
   }
 </style>
 
-<div class="row mt-5 justify-content-center">
-  <div class="col-lg-5 col-md-7 col-sm-10">
-    <div class="auth-card">
-      <h1 class="auth-title mb-4">
-        Login to <span class="text-primary">Toonify</span>
-      </h1>
-      <form action="/login" method="post" class="needs-validation" novalidate>
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            class="form-control"
-            required
-          />
-          <div class="invalid-feedback">Please enter your username</div>
-        </div>
+<div class="auth-container container">
+  <div class="row w-100 align-items-center">
+    <!-- Login card -->
+    <div class="col-lg-6 col-md-7 col-sm-10">
+      <div class="auth-card">
+        <h1 class="auth-title mb-4">
+          Login to <span>Toonify</span>
+        </h1>
+        <form action="/login" method="post" class="needs-validation" novalidate>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              class="form-control"
+              required
+            />
+            <div class="invalid-feedback">Please enter your username</div>
+          </div>
 
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            required
-          />
-          <div class="invalid-feedback">Please enter your password</div>
-        </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              required
+            />
+            <div class="invalid-feedback">Please enter your password</div>
+          </div>
 
-        <button class="btn auth-btn w-100 mt-2">Login</button>
-      </form>
+          <button class="btn auth-btn w-100 mt-2">Login</button>
+        </form>
 
-      <p class="auth-link">
-        Not registered yet? <a href="register">Create an account</a>
-      </p>
+        <p class="auth-link">
+          Not registered yet? <a href="register">Create an account</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Illustration / Animation -->
+    <div class="col-lg-6 d-none d-lg-flex auth-illustration">
+      <!-- Option 1: Static image -->
+      <!-- <img src="/images/toonify-illustration.png" alt="Toonify Illustration" /> -->
+
+      <!-- Option 2: Lottie animation -->
+      <lottie-player
+        src="https://assets7.lottiefiles.com/packages/lf20_jcikwtux.json"
+        background="transparent"
+        speed="1"
+        style="width: 100%; max-width: 450px; height: auto;"
+        loop
+        autoplay
+      ></lottie-player>
     </div>
   </div>
+</div>
+
+<!-- Footer -->
+<div class="page-footer">
+  © <%= new Date().getFullYear() %> Toonify · All rights reserved
 </div>

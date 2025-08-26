@@ -4,7 +4,7 @@ const Image = require("../models/image.js");
 const images = require("./data.js");
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/toonify");
+  await mongoose.connect("mongodb://127.0.0.1:27017/cartoon");
   console.log("DB Connected Successfully 🚀");
 }
 
