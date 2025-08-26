@@ -46,9 +46,14 @@ router
       failureFlash: true,
     }),
     async (req, res) => {
-      let redirectUrl =
-        res.locals.redirectUrl || `/${req.user.username}/dashboard`;
-      res.redirect(redirectUrl);
+      req.session.isAdmin = req.user.isAdmin; // true if user has admin flag in DB
+      if (req.session.isAdmin) {
+        return res.redirect("/admin/dashboard");
+      } else {
+        let redirectUrl =
+          res.locals.redirectUrl || `/${req.user.username}/dashboard`;
+        return res.redirect(redirectUrl);
+      }
     }
   );
 

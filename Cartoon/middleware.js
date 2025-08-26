@@ -12,3 +12,10 @@ module.exports.saveRedirectUrl = (req, res, next) => {
   }
   next();
 };
+
+module.exports.isAdmin = (req, res, next) => {
+  if (!req.isAuthenticated() || !req.session.isAdmin) {
+    return res.status(403).send("🚫 Unauthorized");
+  }
+  next();
+};

@@ -10,6 +10,7 @@ const User = require("./models/users.js");
 
 const authRouter = require("./routes/auth.js");
 const userRouter = require("./routes/user.js");
+const adminRouter = require("./routes/admin.js");
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -33,7 +34,7 @@ async function main() {
 const sessionOptions = {
   secret: "mysupersecretcode",
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -50,7 +51,8 @@ passport.serializeUser(User.serializeUser()); //serialize users into session(log
 passport.deserializeUser(User.deserializeUser()); //deserialize users into session(logout)
 
 app.use((req, res, next) => {
-  res.locals.currentUser = req.user; // make user available globally
+  res.locals.currentUser = req.user;
+  res.locals.isAdmin = req.session.isAdmin || false; // make user available globally
   next();
 });
 
@@ -60,6 +62,8 @@ app.get("/", (req, res) => {
 
 //Auth Route Handlier
 app.use("/", authRouter);
+//admin handler
+app.use("/admin", adminRouter);
 
 //user handler
 app.use("/:username", userRouter);
