@@ -1,32 +1,69 @@
 <%- layout("/layouts/boilerplate.ejs") -%>
 
-<!-- Lottie player (only if using animation) -->
+<!-- Lottie player -->
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 <style>
   body {
-    background: #f6f9fc;
     font-family: "Poppins", sans-serif;
-    min-height: 100vh;
+    min-height: 70vh;
+    width:100%;
+    margin: 0;
     display: flex;
     flex-direction: column;
+    background: #f6f9fc; /* page background */
+  }
+
+  /* Entire login section with gradient background */
+  .auth-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, #6dd5ed, #2193b0);
+    min-height: calc(100vh - 50px); /* leave footer space */
+    width: 100%;
+    /* padding: 3rem 2rem; */
+    border-radius: 24px 24px 0 0;
   }
 
   .auth-container {
+    display: flex;
+    flex: 1;
+    gap: 0;
+    width: 100%;
+    max-width: 12000px;
+  }
+
+  /* Left & Right Sections */
+  .auth-section {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3rem 2rem;
+    min-height: 500px;
   }
 
+  /* .auth-left {
+    padding: 2rem;
+  } */
+
+  .auth-right {
+    /* padding: 2rem; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Login Card */
   .auth-card {
     background: #ffffff;
     border-radius: 18px;
     padding: 2.5rem 2rem 2rem;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-    max-width: 420px;
     width: 100%;
+    max-width: 400px;
   }
 
   .auth-title {
@@ -37,7 +74,7 @@
   }
 
   .auth-title span {
-    color: #0072ff;
+    color: #2193b0;
   }
 
   .form-label {
@@ -53,7 +90,7 @@
   }
 
   .form-control:focus {
-    border-color: #0072ff;
+    border-color: #2193b0;
     box-shadow: 0 0 8px rgba(0, 114, 255, 0.15);
   }
 
@@ -79,55 +116,57 @@
   }
 
   .auth-link a {
-    color: #2193b0;
+    color: #fff;
     font-weight: 600;
-    text-decoration: none;
-  }
-
-  .auth-link a:hover {
     text-decoration: underline;
   }
 
-  .auth-illustration {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 2rem;
-  }
-
-  .auth-illustration img {
-    max-width: 450px;
+  .auth-illustration lottie-player {
     width: 100%;
-    border-radius: 16px;
+    max-width: 400px;
+    height: auto;
   }
 
+  .overlay-text {
+    position: absolute;
+    bottom: 1.5rem;
+    text-align: center;
+    width: 100%;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  /* Footer */
   .page-footer {
     text-align: center;
     font-size: 0.85rem;
     color: #777;
-    margin-top: 3rem;
     padding: 1rem 0;
     border-top: 1px solid #eaeaea;
   }
 
+  /* Responsive */
   @media (max-width: 992px) {
     .auth-container {
       flex-direction: column;
-      gap: 2rem;
+      width: 100%;
     }
-    .auth-illustration {
-      padding-left: 0;
+    .auth-left,
+    .auth-right {
+      width: 100%;
+      padding: 1rem;
     }
-    .auth-illustration img {
-      max-width: 320px;
+    .auth-illustration lottie-player {
+      max-width: 300px;
     }
   }
 </style>
 
-<div class="auth-container container">
-  <div class="row w-100 align-items-center">
-    <!-- Login card -->
-    <div class="col-lg-6 col-md-7 col-sm-10">
+<div class="auth-wrapper">
+  <div class="auth-container">
+    <!-- Left: Login Card -->
+    <div class="auth-section auth-left">
       <div class="auth-card">
         <h1 class="auth-title mb-4">
           Login to <span>Toonify</span>
@@ -161,14 +200,23 @@
         </form>
 
         <p class="auth-link">
-          Not registered yet? <a href="register">Create an account</a>
+          Not registered yet? <a href="register"style="color: black;text-decoration: none; opacity: 0.7;">Create an account</a>
         </p>
       </div>
     </div>
 
-    <!-- Illustration / Animation -->
-    <div class="col-lg-6 d-none d-lg-flex auth-illustration">
-      <!-- <img src="/carousel.gif" alt="My GIF"> -->
+    <!-- Right: Animation -->
+    <div class="auth-section auth-right">
+      <lottie-player
+        src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+      <div class="overlay-text">
+        Transform Your Photos Into Cartoons!
+      </div>
     </div>
   </div>
 </div>
