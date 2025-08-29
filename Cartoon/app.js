@@ -1,3 +1,6 @@
+const dotenv = require('dotenv')
+dotenv.config()
+
 const express = require("express");
 const app = express();
 const ejsMate = require("ejs-mate");
@@ -7,6 +10,7 @@ const session = require("express-session"); //cookies
 const passport = require("passport"); //using inbuilt hashing password
 const LocalStrategy = require("passport-local");
 const User = require("./models/users.js");
+
 
 const authRouter = require("./routes/auth.js");
 const userRouter = require("./routes/user.js");
@@ -35,7 +39,7 @@ main()
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/cartoon");
+  await mongoose.connect(process.env.MONGODB_URL);
 }
 
 const sessionOptions = {
