@@ -28,6 +28,27 @@ const upload = multer({ storage: storage });
 
 // ---------------------------------------------- Dashboard ---------------------------
 
+
+// Dashboard
+router.get(
+  "/dashboard",
+  isLoggedIn,
+  wrapAsync(async (req, res) => {
+    const { username } = req.params;
+
+    if (req.user.username !== username) {
+      return res.status(403).send("🚫 Unauthorized Access");
+    }
+
+    const user = await User.findOne({ username });
+    if (!user) return res.status(404).send("❌ User not found");
+
+    const images = await Image.find({ uploadedBy: user._id });
+
+    res.render("User/Dashboard.ejs", { user, images, activePage: "dashboard" });
+  })
+);
+
 // routes/user.js
 router.post("/:username/upload", isLoggedIn, upload.single("image"), wrapAsync(async (req, res) => {
   const { title, style } = req.body;
