@@ -1,40 +1,110 @@
 <%- layout("/layouts/boilerplate.ejs") -%>
 
+<!-- Lottie player -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 <style>
-  /* Flex container to align left */
-  .signup-container {
+  body {
+    font-family: "Poppins", sans-serif;
+    min-height: 70vh;
+    width: 100%;
+    margin: 0;
     display: flex;
-    justify-content: flex-start; /* Align left */
-    align-items: center;
-    min-height: 80vh; /* Vertical centering */
-    padding: 3rem;
-    gap: 2rem; /* Space in case you add right content later */
+    flex-direction: column;
+    background: #f6f9fc; /* page background */
   }
 
-  /* Registration card styling (kept from your original code) */
+  /* Entire register section with gradient background */
+  .auth-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, #6dd5ed, #2193b0);
+    min-height: calc(100vh - 50px); /* leave footer space */
+    width: 100%;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .auth-container {
+    display: flex;
+    flex: 1;
+    gap: 0;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  /* Left & Right Sections */
+  .auth-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+  }
+
+  .auth-left {
+    padding: 2rem;
+  }
+
+  .auth-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Registration Card */
   .auth-card {
     background: #ffffff;
-    border-radius: 15px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    padding: 2.5rem 2rem 2rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 400px;
   }
 
   .auth-title {
-    font-weight: bold;
+    font-weight: 700;
     color: #2c3e50;
     text-align: center;
+    font-size: 1.8rem;
+  }
+
+  .auth-title span {
+    color: #2193b0;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #34495e;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 0.75rem;
+    border: 1.5px solid #e5eaf0;
+    transition: 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #2193b0;
+    box-shadow: 0 0 8px rgba(0, 114, 255, 0.15);
   }
 
   .auth-btn {
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    background: linear-gradient(90deg, #6dd5ed, #2193b0);
     border: none;
     color: #fff;
     font-weight: 600;
     transition: 0.3s ease;
+    border-radius: 12px;
+    padding: 0.8rem;
   }
 
   .auth-btn:hover {
-    opacity: 0.85;
+    transform: translateY(-2px);
+    opacity: 0.9;
   }
 
   .auth-link {
@@ -44,83 +114,119 @@
   }
 
   .auth-link a {
-    color: #0072ff;
+    color: #fff;
     font-weight: 600;
-    text-decoration: none;
-  }
-
-  .auth-link a:hover {
     text-decoration: underline;
   }
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .signup-container {
+  .auth-illustration lottie-player {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+  }
+
+  .overlay-text {
+    position: absolute;
+    bottom: 1.5rem;
+    text-align: center;
+    width: 100%;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .page-footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #777;
+    padding: 1rem 0;
+    border-top: 1px solid #eaeaea;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .auth-container {
       flex-direction: column;
-      padding: 2rem;
+      width: 100%;
     }
-
-    .auth-card {
-      padding: 1.5rem;
+    .auth-left,
+    .auth-right {
+      width: 100%;
+      padding: 1rem;
     }
-
-    h1.auth-title {
-      font-size: 1.6rem;
-    }
-
-    form input,
-    form button {
-      width: 100% !important;
+    .auth-illustration lottie-player {
+      max-width: 300px;
     }
   }
 </style>
 
-<div class="signup-container">
-  <!-- Left: Registration Form -->
-  <div class="col-md-6 col-lg-4">
-    <div class="auth-card">
-      <h1 class="auth-title mb-4"><span class="text-primary">Toonify</span></h1>
+<div class="auth-wrapper">
+  <div class="auth-container">
+    <!-- Left: Registration Form -->
+    <div class="auth-section auth-left">
+      <div class="auth-card">
+        <h1 class="auth-title mb-4">
+          <span>Toonify</span>
+        </h1>
 
-      <form action="/register" method="post" class="needs-validation" novalidate>
-        <!-- Full Name -->
-        <div class="mb-3">
-          <label for="fullname" class="form-label fw-semibold">FullName</label>
-          <input type="text" id="fullname" name="user[fullname]" class="form-control" placeholder="Enter your fullname" required />
-          <div class="invalid-feedback">Please enter fullname</div>
+        <form action="/register" method="post" class="needs-validation" novalidate>
+          <!-- Full Name -->
+          <div class="mb-3">
+            <label for="fullname" class="form-label">Full Name</label>
+            <input type="text" id="fullname" name="user[fullname]" class="form-control" placeholder="Enter your fullname" required />
+            <div class="invalid-feedback">Please enter fullname</div>
+          </div>
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="user[username]" class="form-control" placeholder="Enter your username" required />
+            <div class="invalid-feedback">Please enter username</div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="user[email]" class="form-control" placeholder="Enter your email" required />
+            <div class="invalid-feedback">Please enter a valid email</div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="user[password]" class="form-control" placeholder="Enter your password" required />
+            <div class="invalid-feedback">Please enter password</div>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="btn auth-btn w-100 mt-2">Register</button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="auth-link">
+          Already registered? <a href="login" style="color: black;text-decoration: none; opacity: 0.7;">Login here</a>
         </div>
+      </div>
+    </div>
 
-        <!-- Username -->
-        <div class="mb-3">
-          <label for="username" class="form-label fw-semibold">Username</label>
-          <input type="text" id="username" name="user[username]" class="form-control" placeholder="Enter your username" required />
-          <div class="invalid-feedback">Please enter username</div>
-        </div>
-
-        <!-- Email -->
-        <div class="mb-3">
-          <label for="email" class="form-label fw-semibold">Email</label>
-          <input type="email" id="email" name="user[email]" class="form-control" placeholder="Enter your email" required />
-          <div class="invalid-feedback">Please enter a valid email</div>
-        </div>
-
-        <!-- Password -->
-        <div class="mb-3">
-          <label for="password" class="form-label fw-semibold">Password</label>
-          <input type="password" id="password" name="user[password]" class="form-control" placeholder="Enter your password" required />
-          <div class="invalid-feedback">Please enter password</div>
-        </div>
-
-        <!-- Submit Button -->
-        <button class="btn auth-btn w-100 mt-2">Register</button>
-      </form>
-
-      <!-- Login Link -->
-      <div class="auth-link">
-        Already registered? <a href="login">Login here</a>
+    <!-- Right: Animation -->
+    <div class="auth-section auth-right">
+      <lottie-player
+        src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+      <div class="overlay-text">
+        Transform Your Photos Into Cartoons!
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Right: Empty / placeholder for animation (optional later) -->
-  <div class="col-md-6 col-lg-8"></div>
+<!-- Footer -->
+<div class="page-footer">
+  © <%= new Date().getFullYear() %> Toonify · All rights reserved
 </div>

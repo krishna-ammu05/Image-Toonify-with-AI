@@ -18,9 +18,16 @@ app.set("views", path.join(__dirname, "views/"));
 app.use(express.static(path.join(__dirname, "public/js")));
 app.use(express.static(path.join(__dirname, "public/css")));
 app.use(express.static(path.join(__dirname, "public/images")));
+app.use(express.static(path.join(__dirname, "public/uploads")));
+app.use(express.static(path.join(__dirname, "public/processed")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, "public")));
+// Serve public folder
+// app.use(express.static('public'));
+// Parse form data
+app.use(express.urlencoded({ extended: true }));
 main()
   .then((res) => {
     console.log("DB Connected Sucessfully");
@@ -68,110 +75,6 @@ app.use("/admin", adminRouter);
 //user handler
 app.use("/:username", userRouter);
 
-// app.get("/pricing", (req, res) => {
-//   res.render("Home/pricing.ejs");
-// });
-
-// app.get("/:id/dashboard", (req, res) => {
-//   res.render("User/Explore.ejs", {
-//     title: "Dashboard",
-//     user: {
-//       name: "John Doe",
-//       email: "johndoe@email.com",
-//       plan: "Free Plan",
-//       uploads: 12,
-//       conversions: 47,
-//       status: "Active",
-//     },
-//     images: [
-//       { url: "/images/sample1.png" },
-//       { url: "/images/sample2.png" },
-//       { url: "/images/sample3.png" },
-//     ],
-//   });
-// });
-
-// app.get("/profile", (req, res) => {
-//   res.render("User/Profile.ejs", {
-//     title: "My Profile",
-//     user: {
-//       name: "John Doe",
-//       email: "johndoe@email.com",
-//       plan: "Free Plan",
-//       uploads: 12,
-//       conversions: 47,
-//       status: "Active",
-//       avatar: "/images/user.png",
-//     },
-//   });
-// });
-
-// app.get("/dashboard", (req, res) => {
-//   const dashboardData = {
-//     stats: {
-//       totalUsers: 1200,
-//       activeUsers: 876,
-//       totalImages: 3400,
-//       conversions: 2890,
-//       revenue: "$12,450",
-//       growth: "18%",
-//     },
-//     recentUsers: [
-//       {
-//         name: "Alice Johnson",
-//         email: "alice@example.com",
-//         joined: "2025-08-01",
-//       },
-//       { name: "Bob Smith", email: "bob@example.com", joined: "2025-08-05" },
-//       {
-//         name: "Charlie Davis",
-//         email: "charlie@example.com",
-//         joined: "2025-08-08",
-//       },
-//     ],
-//     recentActivities: [
-//       { action: "Uploaded image", user: "Alice Johnson", time: "2 mins ago" },
-//       { action: "Cartoonified image", user: "Bob Smith", time: "10 mins ago" },
-//       { action: "Upgraded plan", user: "Charlie Davis", time: "30 mins ago" },
-//     ],
-//     systemHealth: {
-//       uptime: "99.98%",
-//       serverLoad: "45%",
-//       responseTime: "120ms",
-//     },
-//   };
-
-//   res.render("Admin/dashboard.ejs", { dashboardData });
-// });
-
-// app.get("/toonifiedImages", (req, res) => {
-//   // Dummy data
-//   const images = [
-//     {
-//       id: 1,
-//       url: "/uploads/dog-cartoon.png",
-//       name: "Dog Cartoon",
-//       convertedAt: new Date("2025-08-01"),
-//     },
-//     {
-//       id: 2,
-//       url: "/uploads/cat-anime.png",
-//       name: "Cat Anime",
-//       convertedAt: new Date("2025-08-10"),
-//     },
-//     {
-//       id: 3,
-//       url: "/uploads/selfie-sketch.png",
-//       name: "Selfie Sketch",
-//       convertedAt: new Date("2025-08-15"),
-//     },
-//   ];
-
-//   res.render("User/ToonifiedImages.ejs", {
-//     title: "My Toonified Images", // ✅ add this
-//     images,
-//   });
-// });
 
 app.listen(3000, () => {
   console.log("Server is running at port 3000");
