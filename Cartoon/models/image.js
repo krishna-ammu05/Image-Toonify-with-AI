@@ -15,7 +15,7 @@ const imageSchema = new mongoose.Schema({
   },
   style: {
     type: String,
-    enum: ["cartoon", "sketch", "pencil"],
+    enum: ["pencil", "cartoon", "grayscale","sketch","ghibli"],
     default: "cartoon",
   },
   createdAt: {
