@@ -5,6 +5,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const session = require("express-session"); //cookies
 const passport = require("passport"); //using inbuilt hashing password
+const methodOverride = require("method-override");
 const LocalStrategy = require("passport-local");
 const User = require("./models/users.js");
 
@@ -22,6 +23,9 @@ app.use(express.static(path.join(__dirname, "public/uploads")));
 app.use(express.static(path.join(__dirname, "public/processed")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride("_method"));
 
 app.use(express.static(path.join(__dirname, "public")));
 // Serve public folder
@@ -74,7 +78,6 @@ app.use("/admin", adminRouter);
 
 //user handler
 app.use("/:username", userRouter);
-
 
 app.listen(3000, () => {
   console.log("Server is running at port 3000");

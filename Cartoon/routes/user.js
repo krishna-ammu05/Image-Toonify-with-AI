@@ -5,29 +5,28 @@ const User = require("../models/users.js");
 const Image = require("../models/image.js");
 const { isLoggedIn } = require("../middleware.js");
 
-const pythonPath = "C:/Program Files/Python311/python.exe";
+const pythonPath =
+  "C:/Users/BINGI UMESH/AppData/Local/Programs/Python/Python313/python.exe";
 const multer = require("multer");
-const { execFile } = require('child_process');
+const { execFile } = require("child_process");
 const path = require("path");
 const fs = require("fs");
-const { spawn } = require('child_process');
-
+const { spawn } = require("child_process");
 
 // Static files (important!)
 // app.use(express.static(path.join(__dirname, "public")));
 // Setup multer for uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/');
+    cb(null, "public/uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 const upload = multer({ storage: storage });
 
 // ---------------------------------------------- Dashboard ---------------------------
-
 
 // Dashboard
 router.get(
@@ -48,36 +47,6 @@ router.get(
     res.render("User/Dashboard.ejs", { user, images, activePage: "dashboard" });
   })
 );
-
-// routes/user.js
-router.post("/:username/upload", isLoggedIn, upload.single("image"), wrapAsync(async (req, res) => {
-  const { title, style } = req.body;
-  const inputPath = req.file.path;
-  const outputPath = `public/processed/processed_${Date.now()}.png`;
-
-  const { exec } = require("child_process");
-
-  // Run Python script
-  exec(`python ./python/process_image.py "${inputPath}" "${style}" "${outputPath}"`, async (err, stdout, stderr) => {
-    if (err) {
-      console.error(stderr);
-      return res.status(500).send("⚠️ Error processing image");
-    }
-
-    // Save image info to DB
-    await Image.create({
-      title,
-      originalImage: inputPath.replace("public/", ""),   // e.g., uploads/xxx.jpg
-      cartoonImage: outputPath.replace("public/", ""),   // e.g., processed/xxx.png
-      style,
-      uploadedBy: req.user._id
-    });
-
-    // Redirect to dashboard to show gallery
-    res.redirect(`/users/${req.user.username}/dashboard`);
-  });
-}));
-
 
 // ---------------------------------------------- Profile ---------------------------
 
@@ -130,10 +99,10 @@ router.get(
     if (!user) return res.status(404).send("User not found");
 
     //  Added default value for outputImage
-    res.render("User/NewImage.ejs", { 
-      user, 
-      activePage: "upload", 
-      outputImage: null  
+    res.render("User/NewImage.ejs", {
+      user,
+      activePage: "upload",
+      outputImage: null,
     });
   })
 );
@@ -155,19 +124,22 @@ router.post(
 
     // Filenames and paths
     const inputFileName = req.file.filename;
-    const inputPath = `/uploads/${inputFileName}`; // frontend path
     const inputPathFS = req.file.path; // filesystem path
 
     const outputFileName = `processed_${Date.now()}.png`;
     const outputDir = path.join(__dirname, "../public/processed");
     if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-    const outputPathFS = path.join(outputDir, outputFileName); // filesystem path
-    const outputPath = `/processed/${outputFileName}`; // frontend path
+    const outputPathFS = path.join(outputDir, outputFileName);
 
     // Call Python script
     execFile(
-      "C:/Program Files/Python311/python.exe",
-      [path.join(__dirname, "../python/processImage.py"), inputPathFS, style, outputPathFS],
+      "C:/Users/BINGI UMESH/AppData/Local/Programs/Python/Python313/python.exe",
+      [
+        path.join(__dirname, "../python/processImage.py"),
+        inputPathFS,
+        style,
+        outputPathFS,
+      ],
       async (err, stdout, stderr) => {
         if (err) {
           console.error("Python Error:", err);
@@ -177,19 +149,21 @@ router.post(
 
         console.log("Python Stdout:", stdout);
 
-        // Save image to DB
         const newImage = new Image({
           title: req.file.originalname,
-          originalImage: `uploads/${inputFileName}`,  // save relative path
+          originalImage: `uploads/${inputFileName}`,
           cartoonImage: `processed/${outputFileName}`,
           style,
           uploadedBy: req.user._id,
         });
         await newImage.save();
 
-        // Render frontend template
+        await User.findByIdAndUpdate(req.user._id, { $inc: { uploads: 1 } });
+
+        const updatedUser = await User.findById(req.user._id);
+
         res.render("User/NewImage.ejs", {
-          user: req.user,
+          user: updatedUser,
           originalImage: `uploads/${inputFileName}`,
           outputImage: `processed/${outputFileName}`,
           selectedStyle: style,
@@ -200,18 +174,17 @@ router.post(
   })
 );
 
-
 // URL: /:username/image/:id
 router.get("/image/:id", isLoggedIn, async (req, res) => {
   try {
     const { username, id } = req.params;
 
     if (req.user.username !== username) {
-      return res.status(403).send("🚫 Unauthorized Access");
+      return res.status(403).send("Unauthorized Access");
     }
 
     const image = await Image.findById(id).populate("uploadedBy");
-    if (!image) return res.status(404).send("❌ Image not found");
+    if (!image) return res.status(404).send("Image not found");
 
     res.render("User/imageDetail.ejs", {
       user: req.user,
@@ -224,9 +197,8 @@ router.get("/image/:id", isLoggedIn, async (req, res) => {
 });
 
 // DELETE an image
-// URL:/:username/image/:id/delete
-
-router.post("/image/:id/delete", isLoggedIn, async (req, res) => {
+// URL: /:username/image/:id
+router.delete("/image/:id", isLoggedIn, async (req, res) => {
   try {
     const { username, id } = req.params;
 
@@ -234,7 +206,42 @@ router.post("/image/:id/delete", isLoggedIn, async (req, res) => {
       return res.status(403).send("🚫 Unauthorized Access");
     }
 
-    await Image.findOneAndDelete({ _id: id, uploadedBy: req.user._id });
+    const deletedImage = await Image.findOneAndDelete({
+      _id: id,
+      uploadedBy: req.user._id,
+    });
+
+    if (!deletedImage) {
+      return res.status(404).send("⚠️ Image not found");
+    }
+
+    await User.findByIdAndUpdate(req.user._id, { $inc: { uploads: -1 } });
+
+    const originalPath = path.join(
+      __dirname,
+      "..",
+      "public",
+      deletedImage.originalImage
+    );
+    const cartoonPath = path.join(
+      __dirname,
+      "..",
+      "public",
+      deletedImage.cartoonImage
+    );
+
+    console.log("Attempting to delete files:");
+    console.log("Original:", originalPath);
+    console.log("Cartoon:", cartoonPath);
+
+    [originalPath, cartoonPath].forEach((filePath) => {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log("Deleted:", filePath);
+      } else {
+        console.warn("File not found:", filePath);
+      }
+    });
 
     res.redirect(`/${username}/toonifiedImages`);
   } catch (err) {
@@ -268,17 +275,6 @@ router.get(
     });
   })
 );
-
-//-----------------------------delete image----------------------------------
-router.post("/images/delete/:id", isLoggedIn, wrapAsync(async (req, res) => {
-  const image = await Image.findByIdAndDelete(req.params.id);
-  if (image) {
-    // optionally delete files from disk
-    fs.unlinkSync(`public/${image.originalImage}`);
-    fs.unlinkSync(`public/${image.cartoonImage}`);
-  }
-  res.redirect(`/users/${req.user.username}/toonifiedImages`);
-}));
 
 // ---------------------------------------------- Settings ---------------------------
 
@@ -332,8 +328,8 @@ router.post(
 // ---------------------------------------------- Delete Account ---------------------------
 
 //DELETE User Account
-// URL: /:username/delete
-router.post("/delete", isLoggedIn, async (req, res) => {
+// URL: /:username
+router.delete("/", isLoggedIn, async (req, res) => {
   try {
     const { username } = req.params;
 
