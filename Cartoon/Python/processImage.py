@@ -31,6 +31,7 @@ def cartoonize(img):
     cartoon = cv2.bitwise_and(color, color, mask=edges)
     return cartoon
 
+
 def ghibli_style(img):
     painting = cv2.edgePreservingFilter(img, flags=1, sigma_s=80, sigma_r=0.4)
     painting = cv2.bilateralFilter(painting, d=5, sigmaColor=75, sigmaSpace=75)
@@ -53,6 +54,7 @@ def ghibli_style(img):
     ghibli = cv2.bitwise_and(painting, edges)
     return ghibli
 
+
 def process_image(input_path, style, output_path):
     img = cv2.imread(input_path)
     if img is None:
@@ -72,12 +74,17 @@ def process_image(input_path, style, output_path):
     else:
         raise Exception("Invalid style option! Choose 'pencil', 'sketch', 'cartoon', 'gray', or 'ghibli'.")
 
+    # Ensure consistent 3-channel output
+    # if len(result.shape) == 2:
+    #     result = cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
+
     cv2.imwrite(output_path, result)
     return output_path
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         print("Usage: python process_image.py <input_path> <style> <output_path>")
+
         sys.exit(1)
 
     input_path = sys.argv[1]
