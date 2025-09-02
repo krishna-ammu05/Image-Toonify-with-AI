@@ -19,3 +19,26 @@ module.exports.isAdmin = (req, res, next) => {
   }
   next();
 };
+
+// ------------------------------------
+// New Middleware for your payment logic
+// ------------------------------------
+
+// Check if user has reached free conversion limit
+module.exports.checkConversionLimit = async (req, res, next) => {
+  if (!req.isAuthenticated()) return res.redirect("/login");
+
+  const user = req.user;
+  if (user.convertedCount >= 5) {
+    return res.redirect(`/${user.username}/pricing`); // redirect to pricing/payment page
+  }
+
+  next();
+};
+
+module.exports.checkDownloadPayment = (req, res, next) => {
+  if (!req.isAuthenticated()) return res.redirect("/login");
+
+  // Redirect to pricing page before download
+  return res.redirect(`/${req.user.username}/pricing`);
+};
