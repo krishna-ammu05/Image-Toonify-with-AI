@@ -50,13 +50,16 @@
             <%= new Date(img.convertedAt).toLocaleDateString() %>
           </p>
           <div class="d-flex justify-content-center gap-3">
-            <a
-              href="/<%= img.cartoonImage %>"
-              download
-              class="btn btn-sm btn-outline-success rounded-pill px-3"
+            <form
+              action="/<%= user.username %>/image/<%= img.cartoonImage %>/download"
             >
-              ⬇️ Download
-            </a>
+              <button
+                type="submit"
+                class="btn btn-sm btn-outline-success rounded-pill px-3"
+              >
+                ⬇️ Download
+              </button>
+            </form>
 
             <form
               action="/<%= user.username %>/image/<%= img._id %>?_method=DELETE"
