@@ -1,5 +1,5 @@
-const dotenv = require('dotenv')
-dotenv.config()
+const dotenv = require("dotenv");
+dotenv.config();
 
 const express = require("express");
 const app = express();
@@ -12,10 +12,10 @@ const methodOverride = require("method-override");
 const LocalStrategy = require("passport-local");
 const User = require("./models/users.js");
 
-
 const authRouter = require("./routes/auth.js");
 const userRouter = require("./routes/user.js");
 const adminRouter = require("./routes/admin.js");
+const paymentRouter = require("./routes/payment");
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -79,6 +79,8 @@ app.get("/", (req, res) => {
 app.use("/", authRouter);
 //admin handler
 app.use("/admin", adminRouter);
+
+app.use("/payment", paymentRouter);
 
 //user handler
 app.use("/:username", userRouter);

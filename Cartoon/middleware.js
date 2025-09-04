@@ -1,3 +1,5 @@
+const User = require("./models/users.js");
+
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.redirectUrl = req.originalUrl;
@@ -41,4 +43,30 @@ module.exports.checkDownloadPayment = (req, res, next) => {
 
   // Redirect to pricing page before download
   return res.redirect(`/${req.user.username}/pricing`);
+};
+
+//To check Subscription
+
+module.exports.checkSubscription = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  // Free Plan → allow only 5 conversions
+  if (user.plan === "Free Plan") {
+    if (user.conversions >= 5) {
+      return res.redirect(`/${user.username}/pricing`);
+    }
+    return next();
+  }
+
+  // Paid Plans → check expiry
+  if (user.subscriptionEnd && user.subscriptionEnd < new Date()) {
+    // expired → reset back to Free Plan
+    user.plan = "Free Plan";
+    user.subscriptionStart = null;
+    user.subscriptionEnd = null;
+    await user.save();
+    return res.redirect(`/${user.username}/pricing`);
+  }
+
+  next();
 };

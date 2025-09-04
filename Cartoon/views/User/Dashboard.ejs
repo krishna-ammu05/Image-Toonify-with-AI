@@ -11,12 +11,33 @@
                 <%= user.fullname %>
               </h4>
               <p class="text-muted mb-1" id="userEmail"><%= user.email %></p>
+
+              <!-- Show plan -->
               <span
-                class="badge bg-gradient bg-success px-3 py-2"
+                class="badge <%= user.plan === 'Free Plan' ? 'bg-secondary' : 'bg-success' %> px-3 py-2"
                 id="userPlan"
               >
                 <%= user.plan %>
               </span>
+
+              <!-- Show expiry for paid plan -->
+              <% if (user.plan !== "Free Plan" && user.planExpiry) { %>
+              <p class="text-muted mt-2">
+                ⏳ Expires on:
+                <strong
+                  ><%= new Date(user.planExpiry).toLocaleDateString() %></strong
+                >
+              </p>
+              <% } %>
+
+              <!-- If expired -->
+              <% if (user.plan !== "Free Plan" && user.planExpiry && new
+              Date(user.planExpiry) < new Date()) { %>
+              <p class="text-danger fw-bold mt-2">
+                ⚠️ Subscription expired!
+                <a href="/<%= user.username %>/pricing">Renew Now</a>
+              </p>
+              <% } %>
             </div>
             <i
               class="bi bi-person-circle text-secondary"
@@ -26,20 +47,15 @@
         </div>
       </div>
 
+      <!-- Usage Stats -->
       <div class="col-md-6">
         <div class="card shadow-lg border-0 rounded-4 p-4 text-center h-100">
           <h6 class="text-uppercase text-muted">Usage Stats</h6>
           <div class="d-flex justify-content-around mt-3">
-            <!-- <div>
-              <strong class="fs-5 text-dark" id="uploads"
-                ></strong
-              >
-              <p class="text-muted small mb-0">Uploads</p>
-            </div> -->
             <div>
-              <strong class="fs-5 text-dark" id="conversions"
-                ><%= user.conversions %></strong
-              >
+              <strong class="fs-5 text-dark" id="conversions">
+                <%= user.conversions %>
+              </strong>
               <p class="text-muted small mb-0">Conversions</p>
             </div>
           </div>
@@ -57,7 +73,6 @@
         >
           <!-- Image Comparison -->
           <div class="row g-0 position-relative" style="min-height: 280px">
-            <!-- Original -->
             <div class="col-6 position-relative">
               <img
                 src="/<%= img.originalImage %>"
@@ -66,12 +81,9 @@
               />
               <span
                 class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2 px-2 py-1 rounded-pill"
+                >Original</span
               >
-                Original
-              </span>
             </div>
-
-            <!-- Toonified -->
             <div class="col-6 position-relative">
               <img
                 src="/<%= img.cartoonImage %>"
@@ -80,9 +92,8 @@
               />
               <span
                 class="badge bg-info bg-opacity-75 text-dark position-absolute top-0 end-0 m-2 px-2 py-1 rounded-pill"
+                >Toonified</span
               >
-                Toonified
-              </span>
             </div>
           </div>
 
@@ -94,14 +105,25 @@
               <%= new Date(img.convertedAt).toLocaleDateString() %>
             </p>
             <div class="d-flex justify-content-center gap-3">
+              <!-- Download only if paid + not expired -->
+              <% if (user.plan !== "Free Plan" && (!user.planExpiry || new
+              Date(user.planExpiry) > new Date())) { %>
               <a
-                href="/<%= img.cartoonImage %>"
-                download
+                href="/<%= user.username %>/image/<%= img._id %>/download"
                 class="btn btn-sm btn-outline-success rounded-pill px-3"
               >
                 ⬇️ Download
               </a>
+              <% } else { %>
+              <a
+                href="/<%= user.username %>/pricing"
+                class="btn btn-sm btn-outline-warning rounded-pill px-3"
+              >
+                🔒 Upgrade to Download
+              </a>
+              <% } %>
 
+              <!-- Delete -->
               <form
                 action="/<%= user.username %>/image/<%= img._id %>?_method=DELETE"
                 method="POST"
@@ -124,28 +146,12 @@
     </div>
   </div>
 
-  <script>
-    // Dark/Light mode toggle
-    const modeBtn = document.getElementById("modeToggle");
-    if (modeBtn) {
-      modeBtn.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
-        const icon = modeBtn.querySelector("i");
-        if (document.body.classList.contains("dark-mode")) {
-          icon.classList.replace("bi-moon", "bi-brightness-high");
-        } else {
-          icon.classList.replace("bi-brightness-high", "bi-moon");
-        }
-      });
-    }
-  </script>
-
   <style>
-    .gallery-img {
-      transition: transform 0.3s ease-in-out;
+    .hover-card {
+      transition: transform 0.2s ease-in-out;
     }
-    .gallery-img:hover {
-      transform: scale(1.05);
+    .hover-card:hover {
+      transform: scale(1.02);
     }
     body.dark-mode {
       background: linear-gradient(135deg, #1e1e2f, #2c2c3e, #1a1a2e);

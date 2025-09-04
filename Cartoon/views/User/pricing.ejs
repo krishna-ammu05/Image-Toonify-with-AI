@@ -1,23 +1,29 @@
 <% layout('User/user_Boilerplate') -%>
 
 <section class="container mt-5">
-  <h2 class="text-center mb-4 fw-bold">🔑 Subscription Plans (Unlimited Access)</h2>
+  <h2 class="text-center mb-4 fw-bold">
+    🔑 Subscription Plans (Unlimited Access)
+  </h2>
 
   <div class="row g-4 justify-content-center">
-
     <!-- Monthly Plan -->
     <div class="col-md-4">
       <div class="card shadow h-100">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title fw-bold">Monthly</h5>
           <p class="card-text text-muted">Pay month by month</p>
-          <h3 class="fw-bold">₹799 <small class="text-muted">/mo</small></h3>
+          <h3 class="fw-bold">₹799 <small class="text-muted">/month</small></h3>
           <ul class="list-unstyled mt-3 mb-4 flex-grow-1">
             <li>✔ Unlimited image transforms</li>
             <li>✔ All styles & filters</li>
             <li>✔ Cancel anytime</li>
           </ul>
-          <a href="/payment?plan=monthly" class="btn btn-primary mt-auto">Buy Now</a>
+          <button
+            class="btn btn-primary"
+            onclick="startPayment(799, 'monthly')"
+          >
+            Buy Monthly (₹799)
+          </button>
         </div>
       </div>
     </div>
@@ -35,7 +41,9 @@
             <li>✔ Priority processing</li>
             <li>✔ Cancel anytime</li>
           </ul>
-          <a href="/payment?plan=6month" class="btn btn-danger mt-auto">Buy Now</a>
+          <button class="btn btn-danger" onclick="startPayment(4199, '6month')">
+            Buy 6-Month (₹4199)
+          </button>
         </div>
       </div>
     </div>
@@ -52,10 +60,79 @@
             <li>✔ Highest resolution outputs</li>
             <li>✔ Priority support</li>
           </ul>
-          <a href="/payment?plan=annual" class="btn btn-primary mt-auto">Buy Now</a>
+          <button
+            class="btn btn-success"
+            onclick="startPayment(7999, 'annual')"
+          >
+            Buy Annual (₹7999)
+          </button>
         </div>
       </div>
     </div>
-
   </div>
 </section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  // 1️⃣ Function called when user clicks Buy button
+  async function startPayment(amount, planType) {
+    try {
+      // ✅ Send request to backend to create an order
+      const res = await fetch("/payment/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, plan: planType }),
+      });
+
+      const order = await res.json();
+
+      if (order.id) {
+        // 2️⃣ Open Razorpay checkout
+        openRazorpay(order);
+      } else {
+        alert("Error creating order");
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+      alert("Something went wrong while starting payment");
+    }
+  }
+
+  function openRazorpay(order) {
+    var options = {
+      key: "<%= process.env.RAZORPAY_KEY_ID %>", // Your Razorpay key
+      amount: order.amount,
+      currency: order.currency,
+      name: "My App",
+      description: "Subscription Payment",
+      order_id: order.id,
+      handler: function (response) {
+        // ✅ Send payment details to backend for verification
+        fetch("/payment/verify-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(response),
+        })
+          .then((res) => {
+            if (res.redirected) {
+              // ✅ Redirect user to dashboard
+              window.location.href = res.url;
+            } else {
+              return res.json();
+            }
+          })
+          .then((data) => {
+            if (data && !data.success) {
+              alert("Payment verification failed: " + data.message);
+            }
+          })
+          .catch((err) => {
+            console.error("Verification error:", err);
+            alert("Something went wrong while verifying payment");
+          });
+      },
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+  }
+</script>

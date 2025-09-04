@@ -3,11 +3,15 @@ const router = express.Router({ mergeParams: true });
 const wrapAsync = require("../utils/wrapAsync.js");
 const User = require("../models/users.js");
 const Image = require("../models/image.js");
-const { isLoggedIn, checkConversionLimit, checkDownloadPayment } = require("../middleware");
+const {
+  isLoggedIn,
+  checkConversionLimit,
+  checkDownloadPayment,
+  checkSubscription,
+} = require("../middleware");
 
-const pythonPath =
-  "C:/Program Files/Python311/python.exe";
-  // "C:/Program Files/Python311/python.exe";
+const pythonPath = "C:/Program Files/Python311/python.exe";
+// "C:/Program Files/Python311/python.exe";
 const multer = require("multer");
 const { execFile } = require("child_process");
 const path = require("path");
@@ -99,7 +103,6 @@ router.get(
     const user = await User.findOne({ username });
     if (!user) return res.status(404).send("User not found");
 
-
     //  Added default value for outputImage
     res.render("User/NewImage.ejs", {
       user,
@@ -113,6 +116,7 @@ router.get(
 router.post(
   "/upload",
   isLoggedIn,
+  checkSubscription,
   upload.single("image"),
   wrapAsync(async (req, res) => {
     const { username } = req.params;
@@ -166,8 +170,9 @@ router.post(
         });
         await newImage.save();
 
-        await User.findByIdAndUpdate(req.user._id,{ $inc: { uploads: 1, conversions: 1 } });
-
+        await User.findByIdAndUpdate(req.user._id, {
+          $inc: { uploads: 1, conversions: 1 },
+        });
 
         const updatedUser = await User.findById(req.user._id);
 
@@ -224,7 +229,9 @@ router.delete("/image/:id", isLoggedIn, async (req, res) => {
       return res.status(404).send("⚠️ Image not found");
     }
 
-    await User.findByIdAndUpdate(req.user._id, { $inc: { uploads: -1,conversions:-1 } });
+    await User.findByIdAndUpdate(req.user._id, {
+      $inc: { uploads: -1, conversions: -1 },
+    });
 
     const originalPath = path.join(
       __dirname,
@@ -285,35 +292,38 @@ router.get(
   })
 );
 
-
 //-------------------------------Download Image----------------------------------------
-router.get("/image/:id/download", isLoggedIn, async (req, res) => {
-  try {
-    const { username, id } = req.params;
+router.get(
+  "/image/:id/download",
+  isLoggedIn,
+  checkSubscription,
+  async (req, res) => {
+    try {
+      const { username, id } = req.params;
 
-    if (req.user.username !== username) {
-      return res.status(403).send("Unauthorized Access");
+      if (req.user.username !== username) {
+        return res.status(403).send("Unauthorized Access");
+      }
+
+      const image = await Image.findById(id);
+      if (!image) return res.status(404).send("Image not found");
+
+      const user = await User.findById(req.user._id);
+      if (user.plan === "Free Plan") {
+        return res.redirect(`/${username}/pricing`);
+      }
+
+      // ✅ Build file path
+      const filePath = path.join(__dirname, "..", "public", image.cartoonImage);
+
+      // ✅ Force download
+      res.download(filePath, image.title || "toonified.png");
+    } catch (err) {
+      console.error("Download error:", err);
+      res.status(500).send("⚠️ Error downloading image");
     }
-
-    const image = await Image.findById(id);
-    if (!image) return res.status(404).send("Image not found");
-
-    const user = await User.findById(req.user._id);
-    if (user.plan === "Free Plan") {
-      return res.redirect(`/${username}/pricing`);
-    }
-
-    // ✅ Build file path
-    const filePath = path.join(__dirname, "..", "public", image.cartoonImage);
-
-    // ✅ Force download
-    res.download(filePath, image.title || "toonified.png");
-  } catch (err) {
-    console.error("Download error:", err);
-    res.status(500).send("⚠️ Error downloading image");
   }
-});
-
+);
 
 // ---------------------------------------------- Settings ---------------------------
 
