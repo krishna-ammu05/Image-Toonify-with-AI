@@ -37,7 +37,7 @@
             <span
               class="badge bg-info bg-opacity-75 text-dark position-absolute top-0 end-0 m-2 px-2 py-1 rounded-pill"
             >
-              Toonified
+              <%= img.style %>
             </span>
           </div>
         </div>
@@ -50,17 +50,25 @@
             <%= new Date(img.createdAt).toLocaleDateString() %>
           </p>
           <div class="d-flex justify-content-center gap-3">
-            <form
-              action="/<%= user.username %>/image/<%= img.cartoonImage %>/download"
+            <!-- Download only if paid + not expired -->
+            <% if (user.plan !== "Free Plan" && (!user.planExpiry || new
+            Date(user.planExpiry) > new Date())) { %>
+            <a
+              href="/<%= user.username %>/image/<%= img._id %>/download"
+              class="btn btn-sm btn-outline-success rounded-pill px-3"
             >
-              <button
-                type="submit"
-                class="btn btn-sm btn-outline-success rounded-pill px-3"
-              >
-                ⬇️ Download
-              </button>
-            </form>
+              ⬇️ Download
+            </a>
+            <% } else { %>
+            <a
+              href="/<%= user.username %>/pricing"
+              class="btn btn-sm btn-outline-warning rounded-pill px-3"
+            >
+              🔒 Upgrade to Download
+            </a>
+            <% } %>
 
+            <!-- Delete -->
             <form
               action="/<%= user.username %>/image/<%= img._id %>?_method=DELETE"
               method="POST"

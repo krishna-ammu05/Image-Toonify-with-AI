@@ -93,6 +93,7 @@ router.get(
 router.get(
   "/upload",
   isLoggedIn,
+  checkSubscription,
   wrapAsync(async (req, res) => {
     const { username } = req.params;
 
@@ -128,8 +129,13 @@ router.post(
 
     if (!req.file) return res.status(400).send("❌ No file uploaded");
 
+    // Check if free user has reached conversion limit
+    if (user.plan === "Free Plan" && user.conversions > 5) {
+      return res.redirect(`/${username}/pricing`);
+    }
+
     // File paths
-    const inputFileName = req.file.filename; // e.g., imageName.png
+    const inputFileName = req.file.filename;
     const inputPathFS = req.file.path;
 
     // Output folder
@@ -255,7 +261,7 @@ router.delete("/image/:id", isLoggedIn, async (req, res) => {
     }
 
     await User.findByIdAndUpdate(req.user._id, {
-      $inc: { uploads: -1, conversions: -1 },
+      $inc: { uploads: -1 },
     });
 
     const originalPath = path.join(
@@ -338,11 +344,21 @@ router.get(
         return res.redirect(`/${username}/pricing`);
       }
 
-      // ✅ Build file path
-      const filePath = path.join(__dirname, "..", "public", image.cartoonImage);
+      // ✅ Always resolve to /public/processed/ and strip any folder prefix
+      const filePath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "processed",
+        path.basename(image.cartoonImage)
+      );
 
-      // ✅ Force download
-      res.download(filePath, image.title || "toonified.png");
+      res.download(filePath, image.title || "toonified.png", (err) => {
+        if (err) {
+          console.error("Download error:", err);
+          res.status(500).send("⚠️ Error downloading image");
+        }
+      });
     } catch (err) {
       console.error("Download error:", err);
       res.status(500).send("⚠️ Error downloading image");

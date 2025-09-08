@@ -109,13 +109,23 @@
       <!-- Buttons -->
       <div class="text-center mt-4 d-flex justify-content-center gap-3">
         <!-- Download Button -->
+        <!-- Download only if paid + not expired -->
+        <% if (user.plan !== "Free Plan" && (!user.planExpiry || new
+        Date(user.planExpiry) > new Date())) { %>
         <a
-          href="/<%= outputImage %>"
-          download
-          class="btn btn-gradient rounded-pill fw-bold px-4"
+          href="/<%= user.username %>/image/<%= img._id %>/download"
+          class="btn btn-sm btn-outline-success rounded-pill px-3"
         >
           ⬇️ Download
         </a>
+        <% } else { %>
+        <a
+          href="/<%= user.username %>/pricing"
+          class="btn btn-sm btn-warning rounded-pill px-3"
+        >
+          🔒 Upgrade to Download
+        </a>
+        <% } %>
 
         <!-- Share Button -->
         <button
