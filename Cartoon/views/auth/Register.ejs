@@ -162,6 +162,9 @@
 </style>
 
 <div class="auth-wrapper">
+  <% if (error && error.length > 0) { %>
+  <div class="alert alert-danger text-center"><%= error %></div>
+  <% } %>
   <div class="auth-container">
     <!-- Left: Registration Form -->
     <div class="auth-section auth-left">
@@ -169,33 +172,65 @@
         <h1 class="auth-title mb-4">
           <span>Toonify</span>
         </h1>
-
-        <form action="/register" method="post" class="needs-validation" novalidate>
+        <form
+          action="/register"
+          method="post"
+          class="needs-validation"
+          novalidate
+        >
           <!-- Full Name -->
           <div class="mb-3">
             <label for="fullname" class="form-label">Full Name</label>
-            <input type="text" id="fullname" name="user[fullname]" class="form-control" placeholder="Enter your fullname" required />
+            <input
+              type="text"
+              id="fullname"
+              name="user[fullname]"
+              class="form-control"
+              placeholder="Enter your fullname"
+              required
+            />
             <div class="invalid-feedback">Please enter fullname</div>
           </div>
 
           <!-- Username -->
           <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <input type="text" id="username" name="user[username]" class="form-control" placeholder="Enter your username" required />
+            <input
+              type="text"
+              id="username"
+              name="user[username]"
+              class="form-control"
+              placeholder="Enter your username"
+              required
+            />
             <div class="invalid-feedback">Please enter username</div>
           </div>
 
           <!-- Email -->
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" name="user[email]" class="form-control" placeholder="Enter your email" required />
+            <input
+              type="email"
+              id="email"
+              name="user[email]"
+              class="form-control"
+              placeholder="Enter your email"
+              required
+            />
             <div class="invalid-feedback">Please enter a valid email</div>
           </div>
 
           <!-- Password -->
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" id="password" name="user[password]" class="form-control" placeholder="Enter your password" required />
+            <input
+              type="password"
+              id="password"
+              name="user[password]"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            />
             <div class="invalid-feedback">Please enter password</div>
           </div>
 
@@ -205,7 +240,12 @@
 
         <!-- Login Link -->
         <div class="auth-link">
-          Already registered? <a href="login" style="color: black;text-decoration: none; opacity: 0.7;">Login here</a>
+          Already registered?
+          <a
+            href="login"
+            style="color: black; text-decoration: none; opacity: 0.7"
+            >Login here</a
+          >
         </div>
       </div>
     </div>
@@ -219,9 +259,7 @@
         loop
         autoplay
       ></lottie-player>
-      <div class="overlay-text">
-        Transform Your Photos Into Cartoons!
-      </div>
+      <div class="overlay-text">Transform Your Photos Into Cartoons!</div>
     </div>
   </div>
 </div>

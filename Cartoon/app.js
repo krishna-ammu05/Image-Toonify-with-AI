@@ -11,6 +11,7 @@ const passport = require("passport"); //using inbuilt hashing password
 const methodOverride = require("method-override");
 const LocalStrategy = require("passport-local");
 const User = require("./models/users.js");
+const flash = require("connect-flash");
 
 const authRouter = require("./routes/auth.js");
 const userRouter = require("./routes/user.js");
@@ -65,7 +66,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser()); //serialize users into session(login)
 passport.deserializeUser(User.deserializeUser()); //deserialize users into session(logout)
 
+app.use(flash());
+
 app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
   res.locals.currentUser = req.user;
   res.locals.isAdmin = req.session.isAdmin || false; // make user available globally
   next();

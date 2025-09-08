@@ -25,9 +25,11 @@ router
             console.error("Login after register failed:", err);
             return res.redirect("/login");
           }
+          req.flash("success", "Account created successfully. Welcome!");
           res.redirect(`/${registereduser.username}/dashboard`);
         });
       } catch (err) {
+        req.flash("error", "Registration failed. Try again.");
         res.redirect("/register");
       }
     })
@@ -43,7 +45,7 @@ router
     saveRedirectUrl,
     passport.authenticate("local", {
       failureRedirect: "/login",
-      failureFlash: true,
+      failureFlash: "Wrong username or password. Try again!",
     }),
     async (req, res) => {
       req.session.isAdmin = req.user.isAdmin; // true if user has admin flag in DB

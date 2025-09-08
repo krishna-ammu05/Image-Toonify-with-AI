@@ -1,6 +1,9 @@
 <% layout('User/user_Boilerplate') -%>
 <body class="bg-light">
   <div class="container my-5">
+    <% if (success && success.length > 0) { %>
+    <div class="alert alert-success text-center"><%= success %></div>
+    <% } %>
     <!-- User Details -->
     <div class="row g-4 mb-4">
       <div class="col-md-6">
