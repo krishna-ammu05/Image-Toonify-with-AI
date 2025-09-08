@@ -401,9 +401,9 @@ router.post(
 
 // ---------------------------------------------- Delete Account ---------------------------
 
-//DELETE User Account
+// DELETE User Account
 // URL: /:username
-router.delete("/", isLoggedIn, async (req, res) => {
+router.delete("/", isLoggedIn, async (req, res, next) => {
   try {
     const { username } = req.params;
 
@@ -416,7 +416,37 @@ router.delete("/", isLoggedIn, async (req, res) => {
     const user = await User.findOne({ username });
     if (!user) return res.status(404).send("❌ User not found");
 
-    // Delete all images uploaded by this user
+    // Find all images uploaded by this user
+    const images = await Image.find({ uploadedBy: user._id });
+
+    // Delete image files from uploads and processed folders
+    for (const img of images) {
+      const originalPath = path.join(
+        __dirname,
+        "..",
+        "public",
+        img.originalImage
+      );
+      const cartoonPath = path.join(
+        __dirname,
+        "..",
+        "public",
+        img.cartoonImage
+      );
+
+      [originalPath, cartoonPath].forEach((filePath) => {
+        if (fs.existsSync(filePath)) {
+          try {
+            fs.unlinkSync(filePath);
+            console.log("Deleted file:", filePath);
+          } catch (err) {
+            console.warn("Error deleting file:", filePath, err);
+          }
+        }
+      });
+    }
+
+    // Delete all images from DB
     await Image.deleteMany({ uploadedBy: user._id });
 
     // Delete the user account
