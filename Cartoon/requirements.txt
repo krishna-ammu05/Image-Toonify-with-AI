@@ -1,0 +1,12 @@
+# Core
+numpy
+Pillow
+opencv-python
+torch
+torchvision
+
+# ONNX runtime for AnimeGANv3
+onnxruntime
+
+# Utils
+pathlib

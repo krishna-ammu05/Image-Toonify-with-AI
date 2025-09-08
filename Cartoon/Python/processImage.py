@@ -2,12 +2,14 @@ import cv2
 import sys
 import numpy as np
 
+
 def pencil_sketch(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     inv = 255 - gray
     blur = cv2.GaussianBlur(inv, (21, 21), 0)
     sketch = cv2.divide(gray, 255 - blur, scale=256)
     return sketch
+
 
 def sketch(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -16,16 +18,16 @@ def sketch(img):
     _, sketch_img = cv2.threshold(edges, 70, 255, cv2.THRESH_BINARY_INV)
     return sketch_img
 
+
 def grayscale(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
 
 def cartoonize(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blur = cv2.medianBlur(gray, 3)  # lighter blur
     edges = cv2.adaptiveThreshold(
-        blur, 255,
-        cv2.ADAPTIVE_THRESH_MEAN_C,
-        cv2.THRESH_BINARY, 9, 9
+        blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9
     )
     color = cv2.bilateralFilter(img, d=5, sigmaColor=100, sigmaSpace=100)
     cartoon = cv2.bitwise_and(color, color, mask=edges)
@@ -45,9 +47,7 @@ def ghibli_style(img):
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = cv2.adaptiveThreshold(
-        gray, 255,
-        cv2.ADAPTIVE_THRESH_MEAN_C,
-        cv2.THRESH_BINARY, 9, 9
+        gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9
     )
     edges = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
 
@@ -72,7 +72,9 @@ def process_image(input_path, style, output_path):
     elif style == "ghibli":
         result = ghibli_style(img)
     else:
-        raise Exception("Invalid style option! Choose 'pencil', 'sketch', 'cartoon', 'gray', or 'ghibli'.")
+        raise Exception(
+            "Invalid style option! Choose 'pencil', 'sketch', 'cartoon', 'gray', or 'ghibli'."
+        )
 
     # Ensure consistent 3-channel output
     # if len(result.shape) == 2:
@@ -80,6 +82,7 @@ def process_image(input_path, style, output_path):
 
     cv2.imwrite(output_path, result)
     return output_path
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:

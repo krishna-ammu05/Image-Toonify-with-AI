@@ -116,11 +116,10 @@ router.get(
 router.post(
   "/upload",
   isLoggedIn,
-  checkSubscription,
   upload.single("image"),
   wrapAsync(async (req, res) => {
     const { username } = req.params;
-    const { style } = req.body;
+    const { style, method } = req.body; // method = manual / ai
     const user = await User.findById(req.user._id);
 
     if (req.user.username !== username) {
@@ -129,42 +128,67 @@ router.post(
 
     if (!req.file) return res.status(400).send("❌ No file uploaded");
 
-    // Check if free user has reached conversion limit
-    if (user.plan === "Free Plan" && user.conversions >= 5) {
-      return res.redirect(`/${username}/pricing`);
-    }
+    // File paths
+    const inputFileName = req.file.filename; // e.g., imageName.png
+    const inputPathFS = req.file.path;
 
-    // Filenames and paths
-    const inputFileName = req.file.filename;
-    const inputPathFS = req.file.path; // filesystem path
-
-    const outputFileName = `processed_${Date.now()}.png`;
+    // Output folder
     const outputDir = path.join(__dirname, "../public/processed");
     if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-    const outputPathFS = path.join(outputDir, outputFileName);
 
-    // Call Python script
+    const outputPathFS = path.join(outputDir, inputFileName); // same as uploaded filename
+
+    // Select Python script
+    const pythonScript =
+      method === "ai"
+        ? path.join(__dirname, "../python/processAI.py")
+        : path.join(__dirname, "../python/processImage.py");
+
+    // Automatically decide AI model based on style
+    let modelArg = "";
+    if (method === "ai") {
+      if (["ghibli", "dreamy", "custom"].includes(style)) {
+        modelArg = "anime"; // Anime-related styles
+      } else if (style === "cartoon") {
+        modelArg = "cartoon-gan"; // Cartoon style
+      }
+    }
+
+    // Build arguments for Python script
+    const args =
+      method === "manual"
+        ? [pythonScript, inputPathFS, style, outputPathFS]
+        : [pythonScript, inputPathFS, outputDir, modelArg || "anime", style];
+
+    console.log("Running Python script with args:", args);
+
+    // Execute Python script
     execFile(
-      "C:/Program Files/Python311/python.exe",
-      [
-        path.join(__dirname, "../python/processImage.py"),
-        inputPathFS,
-        style,
-        outputPathFS,
-      ],
+      "C:/Users/BINGI UMESH/AppData/Local/Programs/Python/Python313/python.exe",
+      args,
       async (err, stdout, stderr) => {
+        console.log("Python Stdout:", stdout);
+        console.log("Python Stderr:", stderr);
+
         if (err) {
-          console.error("Python Error:", err);
-          console.error("Python Stderr:", stderr);
-          return res.status(500).send("⚠️ Error processing image");
+          console.error("Python Execution Error object:", err);
+          return res
+            .status(500)
+            .send("⚠️ Error processing image. Check server logs for details.");
         }
 
-        console.log("Python Stdout:", stdout);
+        // Save processed image info in DB
+        const processedFileName =
+          stdout
+            .split("Output saved at")?.[1]
+            ?.trim()
+            ?.split(path.sep)
+            ?.pop() || inputFileName;
 
         const newImage = new Image({
           title: req.file.originalname,
           originalImage: `uploads/${inputFileName}`,
-          cartoonImage: `processed/${outputFileName}`,
+          cartoonImage: `processed/${processedFileName}`,
           style,
           uploadedBy: req.user._id,
         });
@@ -176,10 +200,11 @@ router.post(
 
         const updatedUser = await User.findById(req.user._id);
 
+        // Render result page
         res.render("User/NewImage.ejs", {
           user: updatedUser,
           originalImage: `uploads/${inputFileName}`,
-          outputImage: `processed/${outputFileName}`,
+          outputImage: `processed/${processedFileName}`,
           selectedStyle: style,
           activePage: "upload",
         });

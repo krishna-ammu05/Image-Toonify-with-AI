@@ -1,7 +1,9 @@
 <% layout('User/user_Boilerplate') -%>
 
 <section class="container mt-5">
-  <h2 class="text-center fw-bold text-primary mb-4">📤 Upload & Convert Image</h2>
+  <h2 class="text-center fw-bold text-primary mb-4">
+    📤 Upload & Convert Image
+  </h2>
 
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -14,21 +16,25 @@
             enctype="multipart/form-data"
           >
             <!-- Title Input -->
-              <div class="mb-4">
-                    <label for="title" class="form-label fw-semibold">Image Title</label>
-                    <input
-                      type="text"
-                      name="title"
-                      id="title"
-                      class="form-control"
-                      placeholder="Enter a title for your image"
-                      required
-                    />
-        </div>
+            <div class="mb-4">
+              <label for="title" class="form-label fw-semibold"
+                >Image Title</label
+              >
+              <input
+                type="text"
+                name="title"
+                id="title"
+                class="form-control"
+                placeholder="Enter a title for your image"
+                required
+              />
+            </div>
 
             <!-- File Upload -->
             <div class="mb-4">
-              <label for="image" class="form-label fw-semibold">Select Image</label>
+              <label for="image" class="form-label fw-semibold"
+                >Select Image</label
+              >
               <input
                 type="file"
                 name="image"
@@ -38,15 +44,24 @@
               />
             </div>
 
+            <!-- Method Selection -->
+            <div class="mb-4">
+              <label for="method" class="form-label fw-semibold"
+                >Choose Processing Method</label
+              >
+              <select name="method" id="method" class="form-select" required>
+                <option value="manual">🛠️ Manual</option>
+                <option value="ai">🤖 AI</option>
+              </select>
+            </div>
+
             <!-- Style Selection -->
             <div class="mb-4">
-              <label for="style" class="form-label fw-semibold">Choose Style</label>
+              <label for="style" class="form-label fw-semibold"
+                >Choose Style</label
+              >
               <select name="style" id="style" class="form-select" required>
-                <option value="pencil">✏️ Pencil Sketch</option>
-                <option value="cartoon">🎨 Cartoon</option>
-                <option value="grayscale">🖤 Grayscale</option>
-                <option value="sketch">🖌️ Sketch Art</option>
-                <option value="ghibli">🌸 Ghibli Style</option>
+                <!-- Options will be filled dynamically -->
               </select>
             </div>
 
@@ -68,23 +83,37 @@
   <div class="row mt-5 justify-content-center">
     <div class="col-md-10">
       <h4 class="text-center fw-bold mb-4">🔍 Comparison</h4>
-      <div class="d-flex justify-content-around align-items-center flex-wrap gap-3">
+      <div
+        class="d-flex justify-content-around align-items-center flex-wrap gap-3"
+      >
         <!-- Original -->
         <div class="text-center">
           <h6 class="fw-semibold">Original</h6>
-          <img src="/<%= originalImage %>" class="img-fluid rounded shadow" style="max-width: 300px;" />
+          <img
+            src="/<%= originalImage %>"
+            class="img-fluid rounded shadow"
+            style="max-width: 300px"
+          />
         </div>
         <!-- Processed -->
         <div class="text-center">
           <h6 class="fw-semibold">Converted (<%= selectedStyle %>)</h6>
-          <img src="/<%= outputImage %>" class="img-fluid rounded shadow" style="max-width: 300px;" />
+          <img
+            src="/<%= outputImage %>"
+            class="img-fluid rounded shadow"
+            style="max-width: 300px"
+          />
         </div>
       </div>
 
       <!-- Buttons -->
       <div class="text-center mt-4 d-flex justify-content-center gap-3">
         <!-- Download Button -->
-        <a href="/<%= outputImage %>" download class="btn btn-gradient rounded-pill fw-bold px-4">
+        <a
+          href="/<%= outputImage %>"
+          download
+          class="btn btn-gradient rounded-pill fw-bold px-4"
+        >
           ⬇️ Download
         </a>
 
@@ -104,7 +133,7 @@
 <!-- Share Script -->
 <script>
   function shareImage(imagePath) {
-    const fullUrl = window.location.origin + '/' + imagePath;
+    const fullUrl = window.location.origin + "/" + imagePath;
 
     if (navigator.share) {
       navigator.share({
@@ -117,6 +146,43 @@
       alert("🔗 Link copied to clipboard!");
     }
   }
+
+  // Dynamic styles based on method
+  const methodSelect = document.getElementById("method");
+  const styleSelect = document.getElementById("style");
+
+  const styles = {
+    manual: [
+      { value: "pencil", text: "✏️ Pencil Sketch" },
+      { value: "cartoon", text: "🎨 Cartoon" },
+      { value: "grayscale", text: "🖤 Grayscale" },
+      { value: "sketch", text: "🖌️ Sketch Art" },
+      { value: "ghibli", text: "🌸 Ghibli Style" },
+    ],
+    ai: [
+      { value: "cartoon", text: "🎨 Cartoon" },
+      { value: "ghibli", text: "🌸 Ghibli Style" },
+      { value: "custom", text: "✨ Custom" },
+      { value: "dreamy", text: "🌙 Dreamy" },
+    ],
+  };
+
+  function updateStyleOptions(method) {
+    styleSelect.innerHTML = "";
+    styles[method].forEach((opt) => {
+      const option = document.createElement("option");
+      option.value = opt.value;
+      option.textContent = opt.text;
+      styleSelect.appendChild(option);
+    });
+  }
+
+  // Initialize with default
+  updateStyleOptions(methodSelect.value);
+
+  methodSelect.addEventListener("change", (e) => {
+    updateStyleOptions(e.target.value);
+  });
 </script>
 
 <style>
