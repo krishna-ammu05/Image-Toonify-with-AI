@@ -50,7 +50,7 @@
                 >Choose Processing Method</label
               >
               <select name="method" id="method" class="form-select" required>
-                <option value="manual">🛠️ Manual</option>
+                <option value="manual">🛠 Manual</option>
                 <option value="ai">🤖 AI</option>
               </select>
             </div>
@@ -116,7 +116,7 @@
           href="/<%= user.username %>/image/<%= img._id %>/download"
           class="btn btn-sm btn-outline-success rounded-pill px-3"
         >
-          ⬇️ Download
+          ⬇ Download
         </a>
         <% } else { %>
         <a
@@ -163,10 +163,10 @@
 
   const styles = {
     manual: [
-      { value: "pencil", text: "✏️ Pencil Sketch" },
+      { value: "pencil", text: "✏ Pencil Sketch" },
       { value: "cartoon", text: "🎨 Cartoon" },
       { value: "grayscale", text: "🖤 Grayscale" },
-      { value: "sketch", text: "🖌️ Sketch Art" },
+      { value: "sketch", text: "🖌 Sketch Art" },
       { value: "ghibli", text: "🌸 Ghibli Style" },
     ],
     ai: [

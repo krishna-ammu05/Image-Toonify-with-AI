@@ -170,7 +170,8 @@ router.post(
 
     // Execute Python script
     execFile(
-      "C:/Users/BINGI UMESH/AppData/Local/Programs/Python/Python313/python.exe",
+      // "C:/Users/BINGI UMESH/AppData/Local/Programs/Python/Python313/python.exe",
+      "C:\\krish\\Infosys\\Cartoon\\myenv\\Scripts\\python.exe",
       args,
       async (err, stdout, stderr) => {
         console.log("Python Stdout:", stdout);
@@ -180,7 +181,7 @@ router.post(
           console.error("Python Execution Error object:", err);
           return res
             .status(500)
-            .send("⚠️ Error processing image. Check server logs for details.");
+            .send("⚠ Error processing image. Check server logs for details.");
         }
 
         // Save processed image info in DB
@@ -194,7 +195,7 @@ router.post(
         const newImage = new Image({
           title: req.file.originalname,
           originalImage: `uploads/${inputFileName}`,
-          cartoonImage: `processed/${processedFileName}`,
+          cartoonImage:`processed/${processedFileName}`,
           style,
           uploadedBy: req.user._id,
         });
@@ -213,6 +214,7 @@ router.post(
           outputImage: `processed/${processedFileName}`,
           selectedStyle: style,
           activePage: "upload",
+          img: { _id: newImage._id }
         });
       }
     );
@@ -237,7 +239,7 @@ router.get("/image/:id", isLoggedIn, async (req, res) => {
     });
   } catch (err) {
     console.error("Error fetching image detail:", err);
-    res.status(500).send("⚠️ Error fetching image");
+    res.status(500).send("⚠ Error fetching image");
   }
 });
 
@@ -257,7 +259,7 @@ router.delete("/image/:id", isLoggedIn, async (req, res) => {
     });
 
     if (!deletedImage) {
-      return res.status(404).send("⚠️ Image not found");
+      return res.status(404).send("⚠ Image not found");
     }
 
     await User.findByIdAndUpdate(req.user._id, {
@@ -293,7 +295,7 @@ router.delete("/image/:id", isLoggedIn, async (req, res) => {
     res.redirect(`/${username}/toonifiedImages`);
   } catch (err) {
     console.error("Error deleting image:", err);
-    res.status(500).send("⚠️ Error deleting image");
+    res.status(500).send("⚠ Error deleting image");
   }
 });
 
@@ -356,12 +358,12 @@ router.get(
       res.download(filePath, image.title || "toonified.png", (err) => {
         if (err) {
           console.error("Download error:", err);
-          res.status(500).send("⚠️ Error downloading image");
+          res.status(500).send("⚠ Error downloading image");
         }
       });
     } catch (err) {
       console.error("Download error:", err);
-      res.status(500).send("⚠️ Error downloading image");
+      res.status(500).send("⚠ Error downloading image");
     }
   }
 );
@@ -475,7 +477,7 @@ router.delete("/", isLoggedIn, async (req, res, next) => {
     });
   } catch (err) {
     console.error("Error deleting account:", err);
-    res.status(500).send("⚠️ Error deleting account");
+    res.status(500).send("⚠ Error deleting account");
   }
 });
 
