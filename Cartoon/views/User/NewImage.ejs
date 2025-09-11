@@ -1,14 +1,14 @@
 <% layout('User/user_Boilerplate') -%>
 
-<section class="container mt-5">
-  <h2 class="text-center fw-bold text-primary mb-4">
+<section class="container-fluid py-5">
+  <h2 class="text-center fw-bold text-gradient mb-5">
     📤 Upload & Convert Image
   </h2>
 
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-body p-4">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-lg border-0 rounded-5">
+        <div class="card-body p-5">
           <!-- Upload Form -->
           <form
             action="/<%= user.username %>/upload"
@@ -17,14 +17,12 @@
           >
             <!-- Title Input -->
             <div class="mb-4">
-              <label for="title" class="form-label fw-semibold"
-                >Image Title</label
-              >
+              <label for="title" class="form-label fw-semibold"><h5> 📝Image Title</h5></label>
               <input
                 type="text"
                 name="title"
                 id="title"
-                class="form-control"
+                class="form-control form-control-lg rounded-pill"
                 placeholder="Enter a title for your image"
                 required
               />
@@ -32,46 +30,52 @@
 
             <!-- File Upload -->
             <div class="mb-4">
-              <label for="image" class="form-label fw-semibold"
-                >Select Image</label
-              >
+              <label for="image" class="form-label fw-semibold"><h5>🖼 Select Image</h5></label>
               <input
                 type="file"
                 name="image"
                 id="image"
-                class="form-control"
+                class="form-control form-control-lg rounded-pill"
                 required
               />
             </div>
 
             <!-- Method Selection -->
-            <div class="mb-4">
-              <label for="method" class="form-label fw-semibold"
-                >Choose Processing Method</label
-              >
-              <select name="method" id="method" class="form-select" required>
-                <option value="manual">🛠 Manual</option>
-                <option value="ai">🤖 AI</option>
-              </select>
+            <div class="mb-4 text-center">
+              <label class="form-label fw-semibold"><h4>⚙ Choose Processing Method</h4></label>
+              <div class="method-toggle mt-3">
+                <input type="radio" name="method" id="manual" value="manual" checked />
+                <label for="manual" class="toggle-card">
+                  <span class="icon">🎛</span>
+                  <span class="text">Manual</span>
+                </label>
+
+                <input type="radio" name="method" id="ai" value="ai" />
+                <label for="ai" class="toggle-card">
+                  <span class="icon">🤖</span>
+                  <span class="text">AI</span>
+                </label>
+              </div>
             </div>
 
             <!-- Style Selection -->
             <div class="mb-4">
-              <label for="style" class="form-label fw-semibold"
-                >Choose Style</label
-              >
-              <select name="style" id="style" class="form-select" required>
-                <!-- Options will be filled dynamically -->
-              </select>
+              <label class="form-label fw-semibold"><h5>🎨 Choose Style</h5></label>
+              <div class="style-marquee">
+                <div id="style-options" class="d-flex gap-4"></div>
+              </div>
+              <input type="hidden" name="style" id="selected-style" required />
             </div>
 
             <!-- Submit Button -->
-            <button
-              type="submit"
-              class="btn btn-gradient w-100 rounded-pill fw-bold"
-            >
-              Convert
-            </button>
+            <div class="text-center">
+              <button
+                type="submit"
+                class="btn btn-gradient btn-lg rounded-pill fw-bold px-5"
+              >
+                🚀 Convert Now
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -81,70 +85,65 @@
   <!-- Show results only if processed image exists -->
   <% if (outputImage) { %>
   <div class="row mt-5 justify-content-center">
-    <div class="col-md-10">
-      <h4 class="text-center fw-bold mb-4">🔍 Comparison</h4>
-      <div
-        class="d-flex justify-content-around align-items-center flex-wrap gap-3"
-      >
-        <!-- Original -->
-        <div class="text-center">
-          <h6 class="fw-semibold">Original</h6>
-          <img
-            src="/<%= originalImage %>"
-            class="img-fluid rounded shadow"
-            style="max-width: 300px"
-          />
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4 p-4">
+        <h3 class="text-center fw-bold mb-4">🔍 Conversion Preview</h3>
+        <div class="d-flex justify-content-center align-items-start flex-wrap gap-5">
+          <!-- Original -->
+          <div class="preview-card text-center">
+            <h4 class="fw-semibold mb-2">📷 Original</h4>
+            <img
+              src="/<%= originalImage %>"
+              class="img-fluid rounded shadow-lg"
+              style="max-width: 280px"
+            />
+          </div>
+          <!-- Processed -->
+          <div class="preview-card text-center">
+            <h4 class="fw-semibold mb-2">✨ Converted (<%= selectedStyle %>)</h4>
+            <img
+              src="/<%= outputImage %>"
+              class="img-fluid rounded shadow-lg"
+              style="max-width: 280px"
+            />
+          </div>
         </div>
-        <!-- Processed -->
-        <div class="text-center">
-          <h6 class="fw-semibold">Converted (<%= selectedStyle %>)</h6>
-          <img
-            src="/<%= outputImage %>"
-            class="img-fluid rounded shadow"
-            style="max-width: 300px"
-          />
+
+        <!-- Buttons -->
+        <div class="text-center mt-4 d-flex justify-content-center gap-4 flex-wrap">
+          <% if (user.plan !== "Free Plan" && (!user.planExpiry || new Date(user.planExpiry) > new Date())) { %>
+          <a
+            href="/<%= user.username %>/image/<%= img._id %>/download"
+            class="btn btn-success btn-lg rounded-pill px-4"
+          >
+            ⬇ Download
+          </a>
+          <% } else { %>
+          <a
+            href="/<%= user.username %>/pricing"
+            class="btn btn-warning btn-lg rounded-pill px-4"
+          >
+            🔒 Upgrade to Download
+          </a>
+          <% } %>
+
+          <button
+            class="btn btn-gradient btn-lg rounded-pill fw-bold px-5"
+            onclick="shareImage('<%= outputImage %>')"
+          >
+            📤 Share
+          </button>
         </div>
-      </div>
-
-      <!-- Buttons -->
-      <div class="text-center mt-4 d-flex justify-content-center gap-3">
-        <!-- Download Button -->
-        <!-- Download only if paid + not expired -->
-        <% if (user.plan !== "Free Plan" && (!user.planExpiry || new
-        Date(user.planExpiry) > new Date())) { %>
-        <a
-          href="/<%= user.username %>/image/<%= img._id %>/download"
-          class="btn btn-sm btn-outline-success rounded-pill px-3"
-        >
-          ⬇ Download
-        </a>
-        <% } else { %>
-        <a
-          href="/<%= user.username %>/pricing"
-          class="btn btn-sm btn-warning rounded-pill px-3"
-        >
-          🔒 Upgrade to Download
-        </a>
-        <% } %>
-
-        <!-- Share Button -->
-        <button
-          class="btn btn-gradient rounded-pill fw-bold px-4"
-          onclick="shareImage('<%= outputImage %>')"
-        >
-          📤 Share
-        </button>
       </div>
     </div>
   </div>
   <% } %>
 </section>
 
-<!-- Share Script -->
+<!-- Script -->
 <script>
   function shareImage(imagePath) {
     const fullUrl = window.location.origin + "/" + imagePath;
-
     if (navigator.share) {
       navigator.share({
         title: "Check out my converted image!",
@@ -157,45 +156,63 @@
     }
   }
 
-  // Dynamic styles based on method
-  const methodSelect = document.getElementById("method");
-  const styleSelect = document.getElementById("style");
+  const styleOptions = document.getElementById("style-options");
+  const selectedStyleInput = document.getElementById("selected-style");
+  const methodRadios = document.querySelectorAll("input[name='method']");
 
   const styles = {
     manual: [
-      { value: "pencil", text: "✏ Pencil Sketch" },
-      { value: "cartoon", text: "🎨 Cartoon" },
-      { value: "grayscale", text: "🖤 Grayscale" },
-      { value: "sketch", text: "🖌 Sketch Art" },
-      { value: "ghibli", text: "🌸 Ghibli Style" },
+      { value: "pencil", text: "✏ Pencil Art", img: "https://tse1.mm.bing.net/th/id/OIP.LN7ORfxEKCC48oKJGKrHSgAAAA?pid=Api&P=0&h=180" },
+      { value: "cartoon", text: "🎨 Cartoon", img: "https://tse1.mm.bing.net/th/id/OIP.rmn_5H5_tk9HFBhvk8t4pwHaEK?pid=Api&P=0&h=180" },
+      { value: "grayscale", text: "🖤 Grayscale", img: "https://tse1.mm.bing.net/th/id/OIP.QJn4rF9zjFfcyHDHaEF0PwHaJl?pid=Api&P=0&h=180" },
+      { value: "sketch", text: "🖌 Sketch Art", img: "https://tse2.mm.bing.net/th/id/OIP.VjM6vKii9E_vwlBN1-pCpAHaD2?pid=Api&P=0&h=180" },
+      { value: "ghibli", text: "🌸 Ghibli", img: "https://tse2.mm.bing.net/th/id/OIP.16wxaN4KcYZD-F0LlJiwBgHaEK?pid=Api&P=0&h=180" },
     ],
     ai: [
-      { value: "cartoon", text: "🎨 Cartoon" },
-      { value: "ghibli", text: "🌸 Ghibli Style" },
-      { value: "custom", text: "✨ Custom" },
-      { value: "dreamy", text: "🌙 Dreamy" },
+      { value: "cartoon", text: "🎨 Cartoon", img: "https://tse1.mm.bing.net/th/id/OIP.rmn_5H5_tk9HFBhvk8t4pwHaEK?pid=Api&P=0&h=180" },
+      { value: "ghibli", text: "🌸 Ghibli", img: "https://tse2.mm.bing.net/th/id/OIP.16wxaN4KcYZD-F0LlJiwBgHaEK?pid=Api&P=0&h=180" },
+      { value: "custom", text: "✨ Anime", img: "https://tse3.mm.bing.net/th/id/OIP.vEaHTRMtjD_bK5hetMGfJwHaF7?pid=Api&P=0&h=180" },
+      { value: "dreamy", text: "🌙 Dreamy", img: "https://tse3.mm.bing.net/th/id/OIP.qNedMJJahM7CmNlb10tQKgHaE8?pid=Api&P=0&h=180" },
     ],
   };
 
-  function updateStyleOptions(method) {
-    styleSelect.innerHTML = "";
-    styles[method].forEach((opt) => {
-      const option = document.createElement("option");
-      option.value = opt.value;
-      option.textContent = opt.text;
-      styleSelect.appendChild(option);
+  function renderStyles(method) {
+    styleOptions.innerHTML = "";
+    const fullList = [...styles[method], ...styles[method]]; // duplicate for seamless loop
+    fullList.forEach((s, idx) => {
+      const card = document.createElement("div");
+      card.className = "style-card";
+      card.innerHTML = `
+        <img src="${s.img}" alt="${s.text}" class="style-img"/>
+        <p class="mt-2 mb-0 fw-semibold">${s.text}</p>
+      `;
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".style-card").forEach(c => c.classList.remove("selected"));
+        card.classList.add("selected");
+        selectedStyleInput.value = s.value;
+      });
+      styleOptions.appendChild(card);
     });
+    if (styles[method][0]) {
+      selectedStyleInput.value = styles[method][0].value;
+      styleOptions.firstChild.classList.add("selected");
+    }
   }
 
-  // Initialize with default
-  updateStyleOptions(methodSelect.value);
-
-  methodSelect.addEventListener("change", (e) => {
-    updateStyleOptions(e.target.value);
+  methodRadios.forEach(radio => {
+    radio.addEventListener("change", () => renderStyles(radio.value));
   });
+
+  renderStyles("manual");
 </script>
 
+<!-- Styles -->
 <style>
+  .text-gradient {
+    background: linear-gradient(90deg, #4e73df, #1cc88a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   .btn-gradient {
     background: linear-gradient(90deg, #4e73df, #1cc88a);
     border: none;
@@ -204,6 +221,98 @@
   }
   .btn-gradient:hover {
     opacity: 0.9;
-    transform: scale(1.02);
+    transform: scale(1.05);
+  }
+
+  /* Toggle Button for Manual/AI */
+  .method-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .method-toggle input {
+    display: none;
+  }
+  .toggle-card {
+    cursor: pointer;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 20px 30px;
+    min-width: 160px;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+  }
+  .toggle-card .icon {
+    font-size: 2.5rem; /* Bigger logos */
+    margin-bottom: 8px;
+    transition: transform 0.3s ease;
+  }
+  .method-toggle input:checked + .toggle-card {
+    border-color: #1cc88a;
+    box-shadow: 0 0 18px rgba(28, 200, 138, 0.6);
+    transform: scale(1.08);
+  }
+  .method-toggle input:checked + .toggle-card .icon {
+    animation: bounce 0.6s infinite alternate;
+  }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-5px); }
+  }
+
+  /* Styles Scroll like Headlines */
+  .style-marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+  }
+  .style-marquee #style-options {
+    display: inline-flex;
+    animation: scrollStyles 15s linear infinite;
+  }
+  @keyframes scrollStyles {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Style cards fixed size */
+  .style-card {
+    width: 150px;
+    height: 180px;
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 12px;
+    transition: all 0.3s ease;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .style-card.selected {
+    border-color: #1cc88a;
+    box-shadow: 0 0 18px rgba(28, 200, 138, 0.6);
+    transform: scale(1.08);
+  }
+  .style-card:hover {
+    border-color: #4e73df;
+    transform: scale(1.1);
+  }
+  .style-img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+
+  .preview-card img {
+    transition: transform 0.3s ease;
+  }
+  .preview-card img:hover {
+    transform: scale(1.05);
   }
 </style>
