@@ -177,7 +177,12 @@
 
     <!-- Top Navbar -->
     <nav class="top-bar">
-      <button class="btn btn-primary btn-sm">✨ Toonify</button>
+      <button
+        id="toonifyBtn"
+        class="btn btn-primary btn-sm"
+      >
+        ✨ Toonify
+      </button>
       <button id="modeToggle" class="btn btn-outline-dark btn-sm ms-2">
         <i class="bi bi-moon"></i>
       </button>
@@ -192,5 +197,38 @@
 
     <!-- Main Content -->
     <main><%- body %></main>
+
+    <script>
+      // Redirect to Toonify page when button clicked
+      document.getElementById("toonifyBtn").addEventListener("click", function () {
+        window.location.href = "/<%= user.username %>/upload";
+      });
+
+      // Dark mode toggle
+      const modeToggle = document.getElementById("modeToggle");
+      const body = document.body;
+      const icon = modeToggle.querySelector("i");
+
+      // Load saved theme from localStorage
+      if (localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+        icon.classList.replace("bi-moon", "bi-sun");
+        modeToggle.classList.replace("btn-outline-dark", "btn-outline-light");
+      }
+
+      modeToggle.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+
+        if (body.classList.contains("dark-mode")) {
+          icon.classList.replace("bi-moon", "bi-sun");
+          modeToggle.classList.replace("btn-outline-dark", "btn-outline-light");
+          localStorage.setItem("theme", "dark");
+        } else {
+          icon.classList.replace("bi-sun", "bi-moon");
+          modeToggle.classList.replace("btn-outline-light", "btn-outline-dark");
+          localStorage.setItem("theme", "light");
+        }
+      });
+    </script>
   </body>
 </html>
