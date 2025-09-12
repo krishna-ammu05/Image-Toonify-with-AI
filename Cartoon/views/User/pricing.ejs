@@ -1,25 +1,29 @@
 <% layout('User/user_Boilerplate') -%>
 
 <section class="container mt-5">
-  <h2 class="text-center mb-4 fw-bold">
-    🔑 Subscription Plans (Unlimited Access)
+  <!-- Section Heading -->
+  <h2 class="text-center mb-5 fw-bold text-gradient">
+    🔑 Subscription Plans <br />
+    <small class="fw-normal text-muted">Unlimited Access to All Features</small>
   </h2>
 
   <div class="row g-4 justify-content-center">
     <!-- Monthly Plan -->
     <div class="col-md-4">
-      <div class="card shadow h-100">
-        <div class="card-body d-flex flex-column">
+      <div class="card shadow-lg h-100 border-0 pricing-card">
+        <div class="card-body d-flex flex-column text-center">
           <h5 class="card-title fw-bold">Monthly</h5>
           <p class="card-text text-muted">Pay month by month</p>
-          <h3 class="fw-bold">₹799 <small class="text-muted">/month</small></h3>
-          <ul class="list-unstyled mt-3 mb-4 flex-grow-1">
+          <h3 class="fw-bold display-6 text-primary">
+            ₹799 <small class="fs-6 text-muted">/month</small>
+          </h3>
+          <ul class="list-unstyled mt-4 mb-4 flex-grow-1">
             <li>✔ Unlimited image transforms</li>
             <li>✔ All styles & filters</li>
             <li>✔ Cancel anytime</li>
           </ul>
           <button
-            class="btn btn-primary"
+            class="btn btn-primary btn-lg w-100 rounded-pill"
             onclick="startPayment(799, 'monthly')"
           >
             Buy Monthly (₹799)
@@ -30,18 +34,23 @@
 
     <!-- 6-Month Plan -->
     <div class="col-md-4">
-      <div class="card border-danger shadow h-100">
-        <div class="card-body d-flex flex-column">
-          <span class="badge bg-danger mb-2">Best Value</span>
+      <div class="card shadow-lg h-100 border-danger border-2 pricing-card featured">
+        <div class="card-body d-flex flex-column text-center">
+          <span class="badge bg-danger mb-3 px-3 py-2 fs-6">🔥 Best Value</span>
           <h5 class="card-title fw-bold">6-Month Plan</h5>
           <p class="card-text text-muted">Save 20% vs monthly</p>
-          <h3 class="fw-bold">₹4,199 <small class="text-muted">/6mo</small></h3>
-          <ul class="list-unstyled mt-3 mb-4 flex-grow-1">
+          <h3 class="fw-bold display-6 text-danger">
+            ₹4,199 <small class="fs-6 text-muted">/6mo</small>
+          </h3>
+          <ul class="list-unstyled mt-4 mb-4 flex-grow-1">
             <li>✔ Unlimited image transforms</li>
             <li>✔ Priority processing</li>
             <li>✔ Cancel anytime</li>
           </ul>
-          <button class="btn btn-danger" onclick="startPayment(4199, '6month')">
+          <button
+            class="btn btn-danger btn-lg w-100 rounded-pill"
+            onclick="startPayment(4199, '6month')"
+          >
             Buy 6-Month (₹4199)
           </button>
         </div>
@@ -50,18 +59,20 @@
 
     <!-- Annual Plan -->
     <div class="col-md-4">
-      <div class="card shadow h-100">
-        <div class="card-body d-flex flex-column">
+      <div class="card shadow-lg h-100 border-0 pricing-card">
+        <div class="card-body d-flex flex-column text-center">
           <h5 class="card-title fw-bold">Annual Plan</h5>
           <p class="card-text text-muted">Save 30% vs monthly</p>
-          <h3 class="fw-bold">₹7,999 <small class="text-muted">/yr</small></h3>
-          <ul class="list-unstyled mt-3 mb-4 flex-grow-1">
+          <h3 class="fw-bold display-6 text-success">
+            ₹7,999 <small class="fs-6 text-muted">/yr</small>
+          </h3>
+          <ul class="list-unstyled mt-4 mb-4 flex-grow-1">
             <li>✔ Unlimited image transforms</li>
             <li>✔ Highest resolution outputs</li>
             <li>✔ Priority support</li>
           </ul>
           <button
-            class="btn btn-success"
+            class="btn btn-success btn-lg w-100 rounded-pill"
             onclick="startPayment(7999, 'annual')"
           >
             Buy Annual (₹7999)
@@ -72,12 +83,49 @@
   </div>
 </section>
 
+<!-- 🔹 Custom CSS Enhancements -->
+<style>
+  /* Gradient Heading */
+  .text-gradient {
+    background: linear-gradient(45deg, #007bff, #00c6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Card Styling */
+  .pricing-card {
+    border-radius: 1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.15);
+  }
+
+  /* Featured (6-month plan) */
+  .featured {
+    transform: scale(1.05);
+    border-width: 3px !important;
+  }
+  .featured:hover {
+    transform: scale(1.08);
+  }
+
+  /* Buttons */
+  .btn {
+    transition: all 0.3s ease;
+  }
+  .btn:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+</style>
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-  // 1️⃣ Function called when user clicks Buy button
+  // ⚡ Same functionality (unchanged)
   async function startPayment(amount, planType) {
     try {
-      // ✅ Send request to backend to create an order
       const res = await fetch("/payment/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -87,7 +135,6 @@
       const order = await res.json();
 
       if (order.id) {
-        // 2️⃣ Open Razorpay checkout
         openRazorpay(order);
       } else {
         alert("Error creating order");
@@ -100,14 +147,13 @@
 
   function openRazorpay(order) {
     var options = {
-      key: "<%= process.env.RAZORPAY_KEY_ID %>", // Your Razorpay key
+      key: "<%= process.env.RAZORPAY_KEY_ID %>",
       amount: order.amount,
       currency: order.currency,
       name: "My App",
       description: "Subscription Payment",
       order_id: order.id,
       handler: function (response) {
-        // ✅ Send payment details to backend for verification
         fetch("/payment/verify-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -115,7 +161,6 @@
         })
           .then((res) => {
             if (res.redirected) {
-              // ✅ Redirect user to dashboard
               window.location.href = res.url;
             } else {
               return res.json();
